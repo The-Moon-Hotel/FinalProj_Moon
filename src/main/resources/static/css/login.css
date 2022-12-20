@@ -1,0 +1,38 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+
+.loginBanner {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: -1;
+}
+.loginTitle {
+	margin-top: 300px;
+	margin-bottom: 100px;
+	z-index: 2;
+	font-size: 4.5rem;
+    font-family: 'Do Hyeon', sans-serif;
+    color: #ffffffd4;
+}
+h1{
+	font-size: 4rem;
+}
+.content {
+	margin-top: 200px;
+	margin-bottom: 100px;
+}
+.loginBtn{
+	width: 100%;
+}
+
+.loginChk{
+	margin-top:3px;
+	width: 43%;
+	float: right;
+}
+.editChk{
+	margin-top:3px;
+	width: 43%;
+	float: right;
+}

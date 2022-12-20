@@ -1,0 +1,76 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+
+.reserv1{
+	border-top:2px solid black;
+	box-shadow: 0 3px 6px -6px #666;
+	margin-top:10px;
+	text-align: center;
+}
+.reservList1{
+	margin:5% auto;
+	width:50%;
+	text-align:center;
+	border: 1px solid #e3e3e3;
+	background-color:  #e3e3e3;
+	font-size:larger;
+}
+
+#step2{
+	width:33%;
+	height: 80px;
+	border: 1px solid white;
+	background-color: black;
+	color: white;
+	font-weight:900;
+}
+
+#step1, #step3{
+	width:33%;
+	height: 80px;
+	border: 1px solid black;
+	color:black;
+	background-color:white;
+	font-weight:900;
+}
+input, select{
+    height:20px;
+    width:150px;
+    border:none;
+    text-align:center;
+    font-size:large;
+    font-weight:bold;
+}
+#submitBtn {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	background-color: black;
+	width: 120px;
+	height: 50px;
+	border: none;
+	font-size: medium;
+	color: white;
+}
+
+
+.reservResult{
+	border-top:1px solid #e3e3e3;
+	border-collapse:collapse;
+	padding:1%;
+	margin-bottom:80px;
+}
+
+#line{
+    border-bottom:1px solid #e3e3e3;
+    padding:20px;
+}
+
+.reservOption{
+	border-top:1px solid #e3e3e3;
+	border-collapse:collapse;
+	margin-top:5%;
+	margin-bottom:5%;
+	width:80%;
+	height:600px;
+
+}
