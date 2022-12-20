@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+	.faci{
+		align-content: center;
+		position: relative;
+		width: 1500px;
+		margin-left: 470px;
+		margin-top: 150px;
+	}
+	
+	.swim img{
+		text-align: center;
+	}
+	
+	.title{
+		font-size: 20px;
+	}
+	
+	.conten{
+		color: #ABABAB;
+		font-weight: bold;
+	}
+	
+	hr{
+		width: 1080px;
+	}
+	

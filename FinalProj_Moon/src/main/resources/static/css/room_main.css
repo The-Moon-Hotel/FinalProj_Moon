@@ -1,0 +1,46 @@
+@charset "UTF-8";
+	.rooms{
+		position:relative;
+		font-size: 30px;
+		margin: 250px;
+		margin-top: 100px;
+		
+	}
+	
+	.rooms img{
+		width: 600px;
+		height: 300px;
+	}
+	
+	.roomtype{
+		font-size: 20px;
+		margin: 20px;
+	}
+	
+	.look{
+		position: absolute;
+		font-size: 15px;
+		background: #DBD5CA;
+	}
+
+	
+	pre{
+		font-size: 15px
+	}
+	
+	.deluxe{
+		position: absolute;
+		right: 0px;
+		top: 105px;
+	}
+	
+	.suite{
+		position: absolute;
+		top: 700px;
+	}
+	.monogramsuit{
+		position: absolute;
+		right: 0px;
+		top: 700px;
+	}
+	

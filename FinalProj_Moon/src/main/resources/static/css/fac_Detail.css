@@ -1,0 +1,13 @@
+@charset "UTF-8";
+.info{
+		align-content: center;
+		position: relative;
+		width: 650px;
+		margin-left: 100px;
+		margin-top: 50px;
+	}
+	
+	p{
+		font-weight: bold;
+		font-size: 1em;
+	}
