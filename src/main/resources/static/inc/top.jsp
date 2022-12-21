@@ -1,9 +1,9 @@
 <%@page import="java.sql.SQLException"%>
-<%@page import="com.moon.guest.model.GuestSerivce"%>
+<%@page import="com.spring.moon.guest.model.GuestSerivce"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<jsp:useBean id="guestService" class="com.moon.guest.model.GuestSerivce" scope="session"></jsp:useBean>
-<jsp:useBean id="guestVo" class="com.moon.guest.model.GuestVO" scope="page"></jsp:useBean>
+<jsp:useBean id="guestService" class="com.spring.moon.guest.model.GuestSerivce" scope="session"></jsp:useBean>
+<jsp:useBean id="guestVo" class="com.spring.moon.guest.model.GuestVO" scope="page"></jsp:useBean>
     
 <%
 	String t_userid=(String)session.getAttribute("userid");
