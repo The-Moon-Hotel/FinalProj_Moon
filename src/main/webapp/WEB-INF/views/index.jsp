@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%-- <jsp:include page="inc/top.jsp"></jsp:include> --%>
+<jsp:include page="inc/top.jsp"></jsp:include>
 <link rel="stylesheet" href="css/index.css">
 <section class="CarouselSize CarouselLocation " >
 	<article>
@@ -110,4 +110,4 @@
 	</div>
 	</article>
 </section>
-<%-- <jsp:include page="inc/footer.jsp" ></jsp:include> --%>
+<jsp:include page="inc/footer.jsp" ></jsp:include>
