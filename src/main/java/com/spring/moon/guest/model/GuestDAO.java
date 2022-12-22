@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import com.spring.moon.reservation.model.ReservationVO;
+/*import com.spring.moon.reservation.model.ReservationVO;*/
 
 @Repository
 public class GuestDAO {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-
+	
 	// 회원가입
 	public int insertGuest(GuestVO vo) throws SQLException {
 		int res = 0;
@@ -44,7 +44,7 @@ public class GuestDAO {
 	public GuestVO selectByUserid(String userid) throws SQLException {
 		GuestVO vo = new GuestVO();
 		String sql = "select * from guest where userid = ?";
-		List<GuestVO> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<GuestVO>());
+		 vo = jdbcTemplate.queryForObject(sql,new Object[]{userid}, new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
 		return vo;
 	}
 

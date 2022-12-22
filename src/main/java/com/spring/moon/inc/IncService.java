@@ -1,5 +1,5 @@
 package com.spring.moon.inc;
 
-public class IncService {
+public interface IncService {
 
 }

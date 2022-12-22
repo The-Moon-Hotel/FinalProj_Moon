@@ -2,31 +2,10 @@
 <%@page import="com.spring.moon.guest.model.GuestSerivce"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<jsp:useBean id="guestService" class="com.spring.moon.guest.model.GuestSerivce" scope="session"></jsp:useBean>
+<jsp:useBean id="guestService" class="com.spring.moon.guest.model.GuestSerivceImp" scope="session"></jsp:useBean>
 <jsp:useBean id="guestVo" class="com.spring.moon.guest.model.GuestVO" scope="page"></jsp:useBean>
-    
-<%
-	String t_userid=(String)session.getAttribute("userid");
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-	boolean t_login=false;
-	int GuestOrAdmin=GuestSerivce.GUEST_ACCOUNT;
-	
-	if(t_userid!=null&& !t_userid.isEmpty()){
-		t_login=true;
-		try{
-			guestVo=guestService.selectByUserid(t_userid);
-			int sys=guestVo.getSys();
-			if(sys==GuestSerivce.ADMIN_ACCOUNT){
-				GuestOrAdmin=GuestSerivce.ADMIN_ACCOUNT;
-			}
-		}catch(SQLException e){
-			e.printStackTrace();
-		}
-	}else{
-		t_userid="";
-	}
-	
-%>
 <!doctype html>
 <html>
   <head>
@@ -59,7 +38,7 @@
   	});
   	
   	$(function(){
-  		var resevUserid="<%=t_userid%>";
+  		var resevUserid="${t_userid}";
   		$('#bookBtn1').click(function(){
   			if(resevUserid==""){
   				alert("예약을 하려면 로그인이 필요합니다.");
@@ -85,7 +64,7 @@
 <nav class="navbar navbar-expand-md navWhite" style="background: rgba(0, 0, 0, 0.1) ; height:70px;">
 	
   <div class="container-fluid" >
-        <a class="navbar-brand navColor" href="<%=request.getContextPath() %>/index.jsp" >THE MOON HOTEL</a>
+        <a class="navbar-brand navColor" href="/index" >THE MOON HOTEL</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -93,9 +72,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            소개
-          </a>
+          <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">소개</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/greetings.jsp">인사말</a></li>
             <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/aboutBranch.jsp">지점별 정보</a></li>
@@ -129,9 +106,10 @@
         </li>
         <!-- 로고 -->
       </ul>
-      <%if(t_login==true){
-      		if(GuestOrAdmin==GuestSerivce.GUEST_ACCOUNT){%>
-		     	 <!-- 로그인시 보이게 설정 -->
+      <c:if test="${t_login==true }">
+      	<c:choose >
+      		<c:when test="${GuestOrAdmin==GuestSerivce.GUEST_ACCOUNT }">
+      			<!-- 로그인시 보이게 설정 -->
 		        <li class="nav-item dropdown nav-link me-3 mb-2 mb-lg-0 navColor" >
 		          <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 		            마이페이지
@@ -144,8 +122,9 @@
 		          </ul>
 		        </li>
 		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout.jsp"  >로그아웃</a>
-      		<%}else{ %>
-		      	<!-- 관리자 로그인시 보이게 설정 -->
+      		</c:when>
+      		<c:otherwise>
+      			<!-- 관리자 로그인시 보이게 설정 -->
 		        <li class="nav-item dropdown nav-link me-3 mb-2 mb-lg-0 navColor" >
 		          <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 		            관리자페이지
@@ -157,12 +136,14 @@
 		          </ul>
 		        </li>
 		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout.jsp"  >로그아웃</a>
-      		<%} %>
-      	<%}else{ %>
-      	<!-- 로그인 전  -->
-      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/login.jsp"  >로그인</a>
-      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor" href="<%=request.getContextPath() %>/guest/signUp.jsp">회원가입</a>
-      	<%} %>
+      		</c:otherwise>
+      </c:choose>
+      </c:if>
+      <c:if test="${t_login==false }">
+      		<!-- 로그인 전  -->
+      		<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/login.jsp"  >로그인</a>
+      		<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor" href="<%=request.getContextPath() %>/guest/signUp.jsp">회원가입</a>
+      </c:if>
       <form class="d-flex navColor" role="search" >
         <button class="btn btn-outline-primary" type="button" id="bookBtn1">book a room</button>
       </form>
@@ -217,9 +198,10 @@
         </li>
         <!-- 로고 -->
       </ul>
-      <%if(t_login==true){
-      		if(GuestOrAdmin==GuestSerivce.GUEST_ACCOUNT){%>
-				<!-- 로그인시 보이게 설정 -->
+      <c:if test="${t_login==true }">
+      	<c:choose >
+      		<c:when test="${GuestOrAdmin==GuestSerivce.GUEST_ACCOUNT }">
+      			<!-- 로그인시 보이게 설정 -->
 		        <li class="nav-item dropdown nav-link me-3 mb-2 mb-lg-0 navColor"  >
 		          <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 		            마이페이지
@@ -232,8 +214,9 @@
 		          </ul>
 		        </li>
 		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout.jsp" >로그아웃</a>
-      		<%}else if(GuestOrAdmin==GuestSerivce.ADMIN_ACCOUNT){ %>
-		      	<!-- 관리자 로그인시 보이게 설정 -->
+      		</c:when>
+      		<c:otherwise>
+      			<!-- 관리자 로그인시 보이게 설정 -->
 		        <li class="nav-item dropdown nav-link me-3 mb-2 mb-lg-0 navColor" >
 		          <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 		            관리자페이지
@@ -245,12 +228,14 @@
 		          </ul>
 		        </li>
 		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout.jsp"  >로그아웃</a>
-      		<%} %>
-      	<%}else{ %>
-	      	<!-- 로그인 전  -->      
-	      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/login.jsp" >로그인</a>
-	      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor" href="<%=request.getContextPath() %>/guest/signUp.jsp">회원가입</a>
-      	<%} %>
+			</c:otherwise>
+      </c:choose>
+      </c:if>
+      <c:if test="${t_login==false }">
+	      <!-- 로그인 전  -->      
+		  <a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/login.jsp" >로그인</a>
+		  <a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor" href="<%=request.getContextPath() %>/guest/signUp.jsp">회원가입</a>
+      </c:if>
       <form class="d-flex navColor" role="search" >
         <button class="btn btn-outline-primary" type="button" id="bookBtn2">book a room</button>
       </form>
