@@ -25,19 +25,19 @@ public class GuestSerivceImp implements GuestSerivce{
 		
 		//회원가입
 		@Override
-		public int insertGuest(GuestVO vo) throws SQLException{
+		public int insertGuest(GuestVO vo) {
 			return this.guestDAO.insertGuest(vo);
 		}
 		
 		//중복확인
 		@Override
-		public int duplicateUserid(String userid) throws SQLException {
+		public int duplicateUserid(String userid)  {
 			return this.guestDAO.duplicateUserid(userid);
 		}
 		
 		//로그인
 		@Override
-		public int loginCheck(String userid, String pwd) throws SQLException{
+		public int loginCheck(String userid, String pwd) {
 			GuestVO guestVO=this.guestDAO.loginCheck(userid, pwd);
 			
 			String dbPwd=guestVO.getPwd();
@@ -51,29 +51,29 @@ public class GuestSerivceImp implements GuestSerivce{
 		}
 		//회원정보 페이제에 회원정보 불러올때
 		@Override
-		public GuestVO selectByUserid(String userid) throws SQLException{
+		public GuestVO selectByUserid(String userid) {
 			return this.guestDAO.selectByUserid(userid);
 		}
 		// 회원정보 수정
 		@Override
-		public int updateGuset(GuestVO vo) throws SQLException{
+		public int updateGuset(GuestVO vo) {
 			return this.guestDAO.updateGuset(vo);
 		}
 		//회원탈퇴
 		@Override
-		public int OutGuset(String userid , String pwd) throws SQLException{
+		public int OutGuset(String userid , String pwd) {
 			return this.guestDAO.OutGuset(userid, pwd);
 		}
 		
 		//매개변수 회원번호로 회원정보 불러오는 매서드
 		@Override
-		public GuestVO selectByGuestNo(int guestNo) throws SQLException {
+		public GuestVO selectByGuestNo(int guestNo)  {
 			return this.guestDAO.selectByGuestNo(guestNo);
 		}
 		
 		//전체 회원 조회
 		@Override
-		public List<GuestVO> selectAllGuest(String condition, String keyword) throws SQLException{
+		public List<GuestVO> selectAllGuest(String condition, String keyword) {
 			return this.guestDAO.selectAllGuest(condition, keyword);
 		}
 }

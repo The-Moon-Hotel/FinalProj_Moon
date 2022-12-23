@@ -19,23 +19,23 @@ public interface GuestSerivce {
 
 	
 	//회원가입
-	int insertGuest(GuestVO vo) throws SQLException;
+	int insertGuest(GuestVO vo);
 	
 	//중복확인
-	int duplicateUserid(String userid) throws SQLException;
+	int duplicateUserid(String userid);
 	
 	//로그인 
-	int loginCheck(String userid, String pwd) throws SQLException;
+	int loginCheck(String userid, String pwd);
 	//회원정보 페이제에 회원정보 불러올때
-	GuestVO selectByUserid(String userid) throws SQLException;
+	GuestVO selectByUserid(String userid);
 	// 회원정보 수정
-	int updateGuset(GuestVO vo) throws SQLException;
+	int updateGuset(GuestVO vo);
 	//회원탈퇴
-	int OutGuset(String userid , String pwd) throws SQLException;
+	int OutGuset(String userid , String pwd) ;
 	
 	//매개변수 회원번호로 회원정보 불러오는 매서드
-	GuestVO selectByGuestNo(int guestNo) throws SQLException;
+	GuestVO selectByGuestNo(int guestNo);
 	
 	//전체 회원 조회
-	List<GuestVO> selectAllGuest(String condition, String keyword) throws SQLException;
+	List<GuestVO> selectAllGuest(String condition, String keyword);
 }

@@ -19,7 +19,7 @@ public class AskboardServiceImp implements AskboardService{
 	 * @throws SQLException
 	 */
 	@Override
-	public int insert(AskBoardVO vo) throws SQLException {
+	public int insert(AskBoardVO vo){
 		return dao.insert(vo);
 	}
 	
@@ -31,7 +31,7 @@ public class AskboardServiceImp implements AskboardService{
 	 * @throws SQLException
 	 */
 	@Override
-	public List<AskBoardVO> selectAll(String condition, String keyword) throws SQLException{
+	public List<AskBoardVO> selectAll(String condition, String keyword){
 		return dao.selectAll(condition, keyword);
 	}
 	
@@ -42,7 +42,7 @@ public class AskboardServiceImp implements AskboardService{
 	 * @throws SQLException
 	 */
 	@Override
-	public AskBoardVO selectByAskNo(int askno) throws SQLException {
+	public AskBoardVO selectByAskNo(int askno) {
 		return dao.selectByAskNo(askno);
 	}
 	
@@ -53,7 +53,7 @@ public class AskboardServiceImp implements AskboardService{
 	 * @throws SQLException
 	 */
 	@Override
-	public int updateAskboard(AskBoardVO vo) throws SQLException {
+	public int updateAskboard(AskBoardVO vo){
 		return dao.updateAskboard(vo);
 	}
 	
@@ -64,7 +64,7 @@ public class AskboardServiceImp implements AskboardService{
 	 * @throws SQLException
 	 */
 	@Override
-	public int deleteAskboard(int askno) throws SQLException {
+	public int deleteAskboard(int askno){
 		return dao.deleteAskboard(askno);
 	}
 	
@@ -75,7 +75,7 @@ public class AskboardServiceImp implements AskboardService{
 	 * @throws SQLException
 	 */
 	@Override
-	public List<AskBoardVO> selectByGuestno(int guestno) throws SQLException{
+	public List<AskBoardVO> selectByGuestno(int guestno){
 		return dao.selectByGuestno(guestno);
 	}
 }

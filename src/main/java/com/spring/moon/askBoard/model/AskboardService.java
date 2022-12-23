@@ -11,7 +11,7 @@ public interface AskboardService {
 	 * @return
 	 * @throws SQLException
 	 */
-	int insert(AskBoardVO vo) throws SQLException ;
+	int insert(AskBoardVO vo);
 	
 	/**
 	 * 관리자 - 전체 문의글 조회
@@ -20,7 +20,7 @@ public interface AskboardService {
 	 * @return
 	 * @throws SQLException
 	 */
-	List<AskBoardVO> selectAll(String condition, String keyword) throws SQLException;
+	List<AskBoardVO> selectAll(String condition, String keyword);
 	
 	/**
 	 * 문의글 상세보기
@@ -28,7 +28,7 @@ public interface AskboardService {
 	 * @return
 	 * @throws SQLException
 	 */
-	AskBoardVO selectByAskNo(int askno) throws SQLException;
+	AskBoardVO selectByAskNo(int askno) ;
 	
 	/**
 	 * 문의글 수정
@@ -36,7 +36,7 @@ public interface AskboardService {
 	 * @return
 	 * @throws SQLException
 	 */
-	int updateAskboard(AskBoardVO vo) throws SQLException ;
+	int updateAskboard(AskBoardVO vo) ;
 	
 	/**
 	 * 문의글 삭제
@@ -44,7 +44,7 @@ public interface AskboardService {
 	 * @return
 	 * @throws SQLException
 	 */
-	int deleteAskboard(int askno) throws SQLException ;
+	int deleteAskboard(int askno) ;
 	
 	/**
 	 * 회원별 문의글 조회
@@ -52,5 +52,5 @@ public interface AskboardService {
 	 * @return
 	 * @throws SQLException
 	 */
-	List<AskBoardVO> selectByGuestno(int guestno) throws SQLException;
+	List<AskBoardVO> selectByGuestno(int guestno);
 }

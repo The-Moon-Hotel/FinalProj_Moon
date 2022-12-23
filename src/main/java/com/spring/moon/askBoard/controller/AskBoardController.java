@@ -54,7 +54,7 @@ public class AskBoardController {
 		}
 		// 글 목록 불러오기
 		@RequestMapping(value = "/askBoard/askBoardList")
-		public ModelAndView list(HttpServletRequest request,@RequestParam Map<String, Object> map,@RequestParam(value="currentPage", defaultValue = "1") int currentPage) throws SQLException {
+		public ModelAndView list(HttpServletRequest request,@RequestParam Map<String, Object> map,@RequestParam(value="currentPage", defaultValue = "1") int currentPage){
 			HttpSession session = request.getSession();
 			String userid=(String) session.getAttribute("userid");
 			//System.out.println("글 목록 불러오기 map=" + map.get("keyWord") + map.get("keyField"));
@@ -128,7 +128,7 @@ public class AskBoardController {
 
 		}
 		@GetMapping("/askBoard/askDetail")
-		public ModelAndView askDetail(HttpServletRequest request,@RequestParam int no) throws SQLException	{
+		public ModelAndView askDetail(HttpServletRequest request,@RequestParam int no){
 			ModelAndView mav= new ModelAndView();
 			HttpSession session = request.getSession();
 			String userid=(String) session.getAttribute("userid");
