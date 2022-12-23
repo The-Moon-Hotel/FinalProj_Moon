@@ -20,8 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.moon.common.PagingVO;
 import com.spring.moon.askBoard.model.AskBoardVO;
 import com.spring.moon.askBoard.model.AskboardService;
-import com.spring.moon.common.PaginationInfo;
-import com.spring.moon.guest.model.GuestSerivce;
+import com.spring.moon.guest.model.GuestService;
 import com.spring.moon.guest.model.GuestVO;
 
 @Controller
@@ -35,7 +34,7 @@ public class AskBoardController {
 	AskboardService askboardService;
 	
 	@Autowired
-	GuestSerivce guestService;
+	GuestService guestService;
 	
 //////////////////////////////G E T 방식 /////////////////////////////////////////////////////////////////////////////////////////	
 	// 문의게시판 글쓰기 화면 보기
@@ -148,12 +147,7 @@ public class AskBoardController {
 			String userid=(String) map.get("userid");
 			GuestVO vo=null;
 			
-			try {
-				vo = guestService.selectByUserid(userid);
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}  
+			vo = guestService.selectByUserid(userid);  
 			AskBoardVO askBoardVO=new AskBoardVO();
 
 			int guestno = vo.getGuestNo();
@@ -161,12 +155,7 @@ public class AskBoardController {
 			
 			int cnt=0;
 			
-			try {
-				cnt = askboardService.insert(askBoardVO);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			cnt = askboardService.insert(askBoardVO);
 			
 			String msg = "", url="";
 			if (cnt>0) {

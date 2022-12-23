@@ -1,4 +1,4 @@
-package pack.spring.community.common;
+package com.spring.moon.common;
 
 
 /**

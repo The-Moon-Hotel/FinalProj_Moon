@@ -1,8 +1,8 @@
 <%@page import="java.sql.SQLException"%>
-<%@page import="com.spring.moon.guest.model.GuestSerivce"%>
+<%@page import="com.spring.moon.guest.model.GuestService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<jsp:useBean id="guestService" class="com.spring.moon.guest.model.GuestSerivceImp" scope="session"></jsp:useBean>
+<jsp:useBean id="guestService" class="com.spring.moon.guest.model.GuestServiceImp" scope="session"></jsp:useBean>
 <jsp:useBean id="guestVo" class="com.spring.moon.guest.model.GuestVO" scope="page"></jsp:useBean>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 

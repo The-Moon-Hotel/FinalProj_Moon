@@ -1,4 +1,4 @@
-package pack.spring.community.common;
+package com.spring.moon.common;
 
 public interface ConstUtil {
 	//게시판 페이징 관련 상수

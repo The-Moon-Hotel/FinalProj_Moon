@@ -3,7 +3,7 @@ package com.spring.moon.guest.model;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface GuestSerivce {
+public interface GuestService {
 	//아이디 중복확인 상수
 	public static final int EXIST_ID=1;	//존재하는 아이디=>사용불가
 	public static final int NOT_EXIST_ID=2;// 존재하지 않는 아이디 => 사용가능

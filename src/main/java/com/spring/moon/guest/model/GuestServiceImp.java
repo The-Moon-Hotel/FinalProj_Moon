@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GuestSerivceImp implements GuestSerivce{
+public class GuestServiceImp implements GuestService{
 	//아이디 중복확인 상수
 		public static final int EXIST_ID=1;	//존재하는 아이디=>사용불가
 		public static final int NOT_EXIST_ID=2;// 존재하지 않는 아이디 => 사용가능
@@ -43,9 +43,9 @@ public class GuestSerivceImp implements GuestSerivce{
 			String dbPwd=guestVO.getPwd();
 			int result=0;
 			if(pwd.equals(dbPwd)) {
-				result=GuestSerivce.LOGIN_OK;
+				result=GuestService.LOGIN_OK;
 			}else {
-				result=GuestSerivce.DISAGREE_PWD;
+				result=GuestService.DISAGREE_PWD;
 			}
 			return result;
 		}
