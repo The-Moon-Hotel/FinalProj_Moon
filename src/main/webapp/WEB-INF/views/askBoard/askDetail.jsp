@@ -1,49 +1,11 @@
-<%@page import="com.moon.askBoard.model.AskboardService"%>
-<%@page import="com.moon.guest.model.GuestVO"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.sql.SQLException"%>
-<%@page import="com.moon.askBoard.model.AskBoardVO"%>
-<%@page import="com.moon.askBoard.model.AskBoardDAO"%>
+
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="../inc/top.jsp"></jsp:include>
 <%-- <%@ include file = "../login/checkLogin.jsp" %> --%>
 
-<jsp:useBean id="guestSerivce" class="com.moon.guest.model.GuestSerivce" scope="session"></jsp:useBean>
-<jsp:useBean id="guestVO" class="com.moon.guest.model.GuestVO" scope="page"></jsp:useBean>
-
-
-
-<%
-	String userid=(String)session.getAttribute("userid");
-	GuestVO g_vo = guestSerivce.selectByUserid(userid);
-
-
-	String askno = request.getParameter("askno");
-
-	if (askno == null || askno.isEmpty()) {%>
-	<script type="text/javascript">
-		alert('잘못된 url입니다');
-		location.href = "askBoardList.jsp";
-	</script>
-	<%
-		return;
-	}
-	//2.
-	AskboardService dao = new AskboardService();
-	AskBoardVO vo = null;
-
-	try {
-		vo = dao.selectByAskNo(Integer.parseInt(askno));
-
-	} catch (SQLException e) {
-		e.printStackTrace();
-	}
-	//3.
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	
-
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -131,9 +93,9 @@ textarea{
 			<br><br>
 			<div class="bg-white rounded shadow-sm">
 				<div class="board_title">
-				<%=vo.getA_title() %>
+				<%=vo.getA_title() %>${vo.a_title }
 				<!-- 클릭한 게시물 제목 보이기 -->
-				<span class="board_date"><%=sdf.format(vo.getA_regdate()) %> </span><!-- 게시글 날짜 -->
+				<span class="board_date"><fmt:formatDate value="${vo.a_regdate }" pattern ="yyyy-MM-dd HH:mm:ss"/> </span><!-- 게시글 날짜 -->
 				</div> 
 				<br><br>
 				<div class="board_info_box">

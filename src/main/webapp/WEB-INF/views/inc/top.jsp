@@ -1,9 +1,5 @@
-<%@page import="java.sql.SQLException"%>
-<%@page import="com.spring.moon.guest.model.GuestService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<jsp:useBean id="guestService" class="com.spring.moon.guest.model.GuestServiceImp" scope="session"></jsp:useBean>
-<jsp:useBean id="guestVo" class="com.spring.moon.guest.model.GuestVO" scope="page"></jsp:useBean>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!doctype html>
@@ -44,7 +40,7 @@
   				alert("예약을 하려면 로그인이 필요합니다.");
   				event.preventDefault();
   			}else{  				
-  				$(location).attr("href", "<%=request.getContextPath() %>/reservRoom/reservation1.jsp");
+  				$(location).attr("href", "<%=request.getContextPath() %>/reservRoom/reservation1");
   			}
   		});
   		$('#bookBtn2').click(function(){
@@ -52,7 +48,7 @@
   				alert("예약을 하려면 로그인이 필요합니다.");
   				event.preventDefault();
   			}else{  				
-  				$(location).attr("href", "<%=request.getContextPath() %>/reservRoom/reservation1.jsp");
+  				$(location).attr("href", "<%=request.getContextPath() %>/reservRoom/reservation1");
   			}
   		});
   	})
@@ -74,8 +70,8 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">소개</a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/greetings.jsp">인사말</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/aboutBranch.jsp">지점별 정보</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/greetings">인사말</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/aboutBranch">지점별 정보</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -83,14 +79,14 @@
             객실소개
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/deluxeDetail.jsp">디럭스</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/supeDetail.jsp">슈페리어</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/suitDetail.jsp">스위트</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/monoDetail.jsp">모노그램스위트</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/deluxeDetail">디럭스</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/supeDetail">슈페리어</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/suitDetail">스위트</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/monoDetail">모노그램스위트</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link  navColor" href="<%=request.getContextPath() %>/facility/facility.jsp" role="button" aria-expanded="false">
+          <a class="nav-link  navColor" href="<%=request.getContextPath() %>/facility/facility" role="button" aria-expanded="false">
             부대시설
           </a>
         </li>
@@ -99,9 +95,9 @@
             게시판
           </a>
           <ul class="dropdown-menu">
-          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/noticeBoard/noticeBoardList.jsp">공지사항</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/reviewBoard/reviewBoardList.jsp">리뷰게시판</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/askBoard/askBoardList.jsp">문의게시판</a></li>
+          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/noticeBoard/noticeBoardList">공지사항</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/reviewBoard/reviewBoardList">리뷰게시판</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/askBoard/askBoardList">문의게시판</a></li>
           </ul>
         </li>
         <!-- 로고 -->
@@ -115,13 +111,13 @@
 		            마이페이지
 		          </a>
 		          <ul class="dropdown-menu">
-		          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/myReservList.jsp">예약정보 확인</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/guestEdit_pwdChk.jsp">회원정보수정</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/askBoard/askBoardList.jsp">문의내역</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/guestOut.jsp">회원탈퇴</a></li>
+		          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/myReservList">예약정보 확인</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/guestEdit_pwdChk">회원정보수정</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/askBoard/askBoardList">문의내역</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/guestOut">회원탈퇴</a></li>
 		          </ul>
 		        </li>
-		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout.jsp"  >로그아웃</a>
+		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout"  >로그아웃</a>
       		</c:when>
       		<c:otherwise>
       			<!-- 관리자 로그인시 보이게 설정 -->
@@ -130,19 +126,19 @@
 		            관리자페이지
 		          </a>
 		          <ul class="dropdown-menu">
-		          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/guestList.jsp">회원관리</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/reservList.jsp">예약정보조회</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/Sales.jsp">매출조회</a></li>
+		          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/guestList">회원관리</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/reservList">예약정보조회</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/Sales">매출조회</a></li>
 		          </ul>
 		        </li>
-		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout.jsp"  >로그아웃</a>
+		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout"  >로그아웃</a>
       		</c:otherwise>
       </c:choose>
       </c:if>
       <c:if test="${t_login==false }">
       		<!-- 로그인 전  -->
-      		<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/login.jsp"  >로그인</a>
-      		<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor" href="<%=request.getContextPath() %>/guest/signUp.jsp">회원가입</a>
+      		<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/login"  >로그인</a>
+      		<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor" href="<%=request.getContextPath() %>/guest/signUp">회원가입</a>
       </c:if>
       <form class="d-flex navColor" role="search" >
         <button class="btn btn-outline-primary" type="button" id="bookBtn1">book a room</button>
@@ -154,7 +150,7 @@
 <nav class="navbar navbar-expand-md navBlack bg-dark" id="navBlack"style=" height:70px;">
 	
   <div class="container-fluid" >
-        <a class="navbar-brand navColor" href="<%=request.getContextPath() %>/index.jsp" >THE MOON HOTEL</a>
+        <a class="navbar-brand navColor" href="<%=request.getContextPath() %>/index" >THE MOON HOTEL</a>
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -166,8 +162,8 @@
             소개
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/greetings.jsp">인사말</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/aboutBranch.jsp">지점별 정보</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/greetings">인사말</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/about/aboutBranch">지점별 정보</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -175,14 +171,14 @@
             객실소개
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/deluxeDetail.jsp">디럭스</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/supeDetail.jsp">슈페리어</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/suitDetail.jsp">스위트</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/monoDetail.jsp">모노그램스위트</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/deluxeDetail">디럭스</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/supeDetail">슈페리어</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/suitDetail">스위트</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/room/monoDetail">모노그램스위트</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link  navColor" href="<%=request.getContextPath() %>/facility/facility.jsp" role="button" aria-expanded="false">
+          <a class="nav-link  navColor" href="<%=request.getContextPath() %>/facility/facility" role="button" aria-expanded="false">
             부대시설
           </a>
         </li>
@@ -191,9 +187,9 @@
             게시판
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/noticeBoard/noticeBoardList.jsp">공지사항</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/reviewBoard/reviewBoardList.jsp">리뷰게시판</a></li>
-            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/askBoard/askBoardList.jsp">문의게시판</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/noticeBoard/noticeBoardList">공지사항</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/reviewBoard/reviewBoardList">리뷰게시판</a></li>
+            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/askBoard/askBoardList">문의게시판</a></li>
           </ul>
         </li>
         <!-- 로고 -->
@@ -207,13 +203,13 @@
 		            마이페이지
 		          </a>
 		          <ul class="dropdown-menu dropdown-menu-dark">
-		          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/myReservList.jsp">예약정보 확인</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/guestEdit_pwdChk.jsp">회원정보수정</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/askBoard/askBoardList.jsp">문의내역</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/guestOut.jsp">회원탈퇴</a></li>
+		          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/myReservList">예약정보 확인</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/guestEdit_pwdChk">회원정보수정</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/askBoard/askBoardList">문의내역</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/guest/guestOut">회원탈퇴</a></li>
 		          </ul>
 		        </li>
-		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout.jsp" >로그아웃</a>
+		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout" >로그아웃</a>
       		</c:when>
       		<c:otherwise>
       			<!-- 관리자 로그인시 보이게 설정 -->
@@ -222,19 +218,19 @@
 		            관리자페이지
 		          </a>
 		          <ul class="dropdown-menu dropdown-menu-dark">
-		          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/guestList.jsp">회원관리</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/reservList.jsp">예약정보조회</a></li>
-		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/Sales.jsp">매출조회</a></li>
+		          	<li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/guestList">회원관리</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/reservList">예약정보조회</a></li>
+		            <li><a class="dropdown-item" href="<%=request.getContextPath() %>/admin/Sales">매출조회</a></li>
 		          </ul>
 		        </li>
-		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout.jsp"  >로그아웃</a>
+		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/logout"  >로그아웃</a>
 			</c:otherwise>
       </c:choose>
       </c:if>
       <c:if test="${t_login==false }">
 	      <!-- 로그인 전  -->      
-		  <a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/login.jsp" >로그인</a>
-		  <a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor" href="<%=request.getContextPath() %>/guest/signUp.jsp">회원가입</a>
+		  <a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="<%=request.getContextPath() %>/login/login" >로그인</a>
+		  <a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor" href="<%=request.getContextPath() %>/guest/signUp">회원가입</a>
       </c:if>
       <form class="d-flex navColor" role="search" >
         <button class="btn btn-outline-primary" type="button" id="bookBtn2">book a room</button>

@@ -9,7 +9,6 @@
 <%-- <%@ include file="../login/checkLogin.jsp"%> --%>
 <c:import url="/inc/top"></c:import>
 <c:set var="userid" value="${sessionScope.userid }" />
-
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
 	rel="stylesheet"

@@ -36,15 +36,15 @@ public class GuestDAO {
 
 	// 로그인
 	public GuestVO loginCheck(String userid, String pwd)  {
-		String sql = "select pwd from guest where userid = "+userid+" and outdate is null";
+		String sql = "select pwd from guest where userid = '"+userid+"' and outdate is null";
 		GuestVO guestVo = jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<GuestVO>(GuestVO.class));		
 		return guestVo;
 	}
 
 	// 회원정보 페이지에 회원정보 불러올때
 	public GuestVO selectByUserid(String userid)  {
-		String sql = "select * from guest where userid ="+userid;
-		GuestVO guestVo = jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
+		String sql = "select * from guest where userid ='"+userid+"'";
+		GuestVO guestVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
 		return guestVo;
 	}
 

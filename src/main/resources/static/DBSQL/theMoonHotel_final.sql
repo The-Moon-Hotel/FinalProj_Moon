@@ -188,7 +188,7 @@ CREATE UNIQUE INDEX PK_facilityInfo
 		facInfoNo ASC
 	);
 
-ALTER TABLE facilityInfo
+ALTER TABLE facilityInfoguest
 	ADD
 		CONSTRAINT PK_facilityInfo
 		PRIMARY KEY (
@@ -203,7 +203,6 @@ insert into facilityInfo(facInfoNo, facName, adultPrice, kidsPrice)
 values(3, '사우나', 35000, 0);
 insert into facilityInfo(facInfoNo, facName, adultPrice, kidsPrice)
 values(4, '헬스장', 20000, 0);
-
 
 /* 객실 */
 CREATE TABLE Room (
