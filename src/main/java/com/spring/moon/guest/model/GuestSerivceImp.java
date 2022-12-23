@@ -38,7 +38,16 @@ public class GuestSerivceImp implements GuestSerivce{
 		//로그인
 		@Override
 		public int loginCheck(String userid, String pwd) throws SQLException{
-			return this.guestDAO.loginCheck(userid, pwd);
+			GuestVO guestVO=this.guestDAO.loginCheck(userid, pwd);
+			
+			String dbPwd=guestVO.getPwd();
+			int result=0;
+			if(pwd.equals(dbPwd)) {
+				result=GuestSerivce.LOGIN_OK;
+			}else {
+				result=GuestSerivce.DISAGREE_PWD;
+			}
+			return result;
 		}
 		//회원정보 페이제에 회원정보 불러올때
 		@Override

@@ -10,12 +10,14 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.moon.common.PagingVO;
 import com.spring.moon.askBoard.model.AskBoardVO;
 import com.spring.moon.askBoard.model.AskboardService;
 import com.spring.moon.common.PaginationInfo;
@@ -38,26 +40,36 @@ public class AskBoardController {
 //////////////////////////////G E T 방식 /////////////////////////////////////////////////////////////////////////////////////////	
 	// 문의게시판 글쓰기 화면 보기
 		@RequestMapping(value = "/askBoard/askWrite", method = RequestMethod.GET)
-		public ModelAndView write(HttpServletRequest request, @RequestParam String uId) {
+		public ModelAndView write(HttpServletRequest request, @RequestParam String userid) {
 			HttpSession session = request.getSession();
-			session.setAttribute("uId_Session", uId);
+			session.setAttribute("userid", userid);
 
 			ModelAndView mav = new ModelAndView();
 
 
-			mav.addObject("uId", uId);
+			mav.addObject("userid", userid);
 			mav.setViewName("askBoard/askWrite");
 
 			return mav;
 		}
 		// 글 목록 불러오기
-		@RequestMapping(value = "/bbs/list")
-		public ModelAndView list(@RequestParam Map<String, Object> map,@RequestParam(value="nowPage", required = false) String nowPage) {
-
+		@RequestMapping(value = "/askBoard/askBoardList")
+		public ModelAndView list(HttpServletRequest request,@RequestParam Map<String, Object> map,@RequestParam(value="currentPage", defaultValue = "1") int currentPage) throws SQLException {
+			HttpSession session = request.getSession();
+			String userid=(String) session.getAttribute("userid");
 			//System.out.println("글 목록 불러오기 map=" + map.get("keyWord") + map.get("keyField"));
-			map.get("keyWord");
-			map.get("keyField");
-			List<Map<String, Object>> list = this.askboardService.selectAll(map);
+			GuestVO g_vo = guestService.selectByUserid(userid);
+			List<AskBoardVO> list=null;
+			
+			//일반회원이라면 (sys==1)
+			 if(g_vo.getSys() == 1){
+				list = this.askboardService.selectByGuestno(g_vo.getGuestNo()); 
+				
+			//관리자라면
+			 }else{
+				
+				list = this.askboardService.selectAll(map.get("keyword").toString(),map.get("condition").toString());
+			} 
 			/*
 			 * for (int i = 0; i < list.size(); i++) { System.out.println((String)
 			 * list.get(i).get("uName")); }
@@ -74,17 +86,7 @@ public class AskBoardController {
 			 * 페이징 변수값의 이해 totalRecord=> 200 전체레코드 numPerPage => 10 pagePerBlock => 5
 			 * totalPage => 20 totalBlock => 4 (20/5 => 4)
 			 */
-			int currentPage = 1; // 현재 (사용자가 보고 있는) 페이지 번호
-			if(nowPage !=null&& !nowPage.isEmpty()) {
-				currentPage=Integer.parseInt(nowPage);
-			}
 			int nowBlock = 1; // 현재 (사용자가 보고 있는) 블럭
-
-			int start = 0; // DB에서 데이터를 불러올 때 시작하는 인덱스 번호
-			int end = 5; // 시작하는 인덱스 번호부터 반환하는(=출력하는) 데이터 개수
-			// select * from T/N where... order by ... limit 5, 5;
-			// 데이터가 6개 1~5
-			// 인덱스번호 5이므로 6번 자료를 의미 5개
 
 			int listSize = 0; // 1페이지에서 보여주는 데이터 수
 			// 출력할 데이터의 개수 = 데이터 1개는 가로줄 1개
@@ -98,12 +100,6 @@ public class AskBoardController {
 				keyWord = (String) map.get("keyWord");
 			}
 
-			if (map.get("currentPage") != null) {
-				currentPage = (int) map.get("currentPage");
-				start = (currentPage * pageSize) - pageSize; // 2 페이지라면 start 5
-				end = pageSize; // 2 페이지라고 하더라도 end 5
-			}
-
 			/*
 			 * select * from tblBoard order by num desc limit 10, 10; 데이터가 100개 => num : 100
 			 * 99 98 97 ... 91 | 90 .... 2 1 start, end : 0 1 2 3.... 9 10 페이지당 출력할 데이터 수
@@ -115,25 +111,35 @@ public class AskBoardController {
 			if (list != null) {
 				totalRecord = list.size();
 			}
-			PaginationInfo pagingInfo = new PaginationInfo(currentPage, totalRecord, pageSize, blockSize);
+			PagingVO pagingVo = new PagingVO(currentPage, totalRecord, pageSize, blockSize);
 			// 전체 데이터 수 반환
-
-			nowBlock = (int) Math.ceil((double) pagingInfo.getCurrentPage() / pagingInfo.getBlockSize());
-			totalBlock = (int) Math.ceil((double) pagingInfo.getTotalPage() / pagingInfo.getBlockSize());
 
 			/////////////////////// 페이징 관련 속성 값 끝///////////////////////////
 
 			ModelAndView mav = new ModelAndView();
 
 			mav.addObject("list", list);
-			mav.addObject("pagingInfo", pagingInfo);
-			mav.addObject("nowBlock", nowBlock);
-			mav.addObject("totalBlock", totalBlock);
+			mav.addObject("pagingVo", pagingVo);
+			mav.addObject("g_vo", g_vo);
 
-			mav.setViewName("/bbs/list");
+			mav.setViewName("/askBoard/askBoardList");
 
 			return mav;
 
+		}
+		@GetMapping("/askBoard/askDetail")
+		public ModelAndView askDetail(HttpServletRequest request,@RequestParam int no) throws SQLException	{
+			ModelAndView mav= new ModelAndView();
+			HttpSession session = request.getSession();
+			String userid=(String) session.getAttribute("userid");
+			GuestVO g_vo = guestService.selectByUserid(userid);
+			
+			AskBoardVO vo = this.askboardService.selectByAskNo(no);
+			
+			mav.addObject("sys", g_vo.getSys());
+			mav.addObject("vo", vo);
+			mav.setViewName("askBoard/askDetail");
+			return mav;
 		}
 ////////////////////////////// P O S T 방식 ///////////////////////////////////////////////////////////////////////////////////	
 		@RequestMapping(value = "/askBoard/askWrite", method = RequestMethod.POST)
