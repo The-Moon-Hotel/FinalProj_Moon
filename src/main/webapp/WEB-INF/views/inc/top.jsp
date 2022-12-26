@@ -60,7 +60,7 @@
 <nav class="navbar navbar-expand-md navWhite" style="background: rgba(0, 0, 0, 0.1) ; height:70px;">
 	
   <div class="container-fluid" >
-        <a class="navbar-brand navColor" href="/index" >THE MOON HOTEL</a>
+        <a class="navbar-brand navColor" href="/" >THE MOON HOTEL</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -150,7 +150,7 @@
 <nav class="navbar navbar-expand-md navBlack bg-dark" id="navBlack"style=" height:70px;">
 	
   <div class="container-fluid" >
-        <a class="navbar-brand navColor" href="<%=request.getContextPath() %>/index" >THE MOON HOTEL</a>
+        <a class="navbar-brand navColor" href="/" >THE MOON HOTEL</a>
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

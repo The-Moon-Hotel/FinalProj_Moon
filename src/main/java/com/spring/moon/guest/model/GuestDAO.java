@@ -43,8 +43,9 @@ public class GuestDAO {
 
 	// 회원정보 페이지에 회원정보 불러올때
 	public GuestVO selectByUserid(String userid)  {
-		String sql = "select * from guest where userid ='"+userid+"'";
-		GuestVO guestVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
+		String sql = "select * from guest where userid ='"+userid+"'limit 1";
+		GuestVO	guestVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
+		
 		return guestVo;
 	}
 

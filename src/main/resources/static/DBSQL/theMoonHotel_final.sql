@@ -92,10 +92,17 @@ CREATE TABLE askBoard (
 	guestNo int NOT NULL, /* 회원번호 */
 	a_title char(50) NOT NULL, /* 제목 */
 	a_content text NOT NULL, /* 문의내용 */
-	a_regdate DATETIME  DEFAULT now() NOT NULL /* 작성일 */
+	a_regdate DATETIME  DEFAULT now() NOT NULL, /* 작성일 */
+    fileName	char(50)			null,
+    originalFilename char(50)			null,
+    fileSize		int					null
 );
-
-
+select*  from askBoard;
+/*
+ALTER TABLE askBoard ADD fileName char(50);
+ALTER TABLE askBoard ADD originalFilename char(50);
+ALTER TABLE askBoard MODIFY  fileSize bigint;
+*/
 CREATE UNIQUE INDEX askBoard
 	ON askBoard (
 		askNo ASC
@@ -203,7 +210,7 @@ insert into facilityInfo(facInfoNo, facName, adultPrice, kidsPrice)
 values(3, '사우나', 35000, 0);
 insert into facilityInfo(facInfoNo, facName, adultPrice, kidsPrice)
 values(4, '헬스장', 20000, 0);
-
+select * from guest where userid ='admin';
 /* 객실 */
 CREATE TABLE Room (
 	RoomNo int unique auto_increment, /* 객실정보번호 */
@@ -305,7 +312,7 @@ ALTER TABLE reviewBoard
 			guestNo
 		);
 
-ALTER TABLE askBoard
+ALTER TABLE askboardaskBoard
 	ADD
 		CONSTRAINT FK_guest_TO_askBoard
 		FOREIGN KEY (

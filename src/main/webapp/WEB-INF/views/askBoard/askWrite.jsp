@@ -58,33 +58,22 @@ textarea{
 		<fieldset>
 			<legend>문의하기</legend>
 			<div class="form-group">
-				<label for="exampleSelect1" class="form-label mt-4">게시판 목록</label> 
-
-				<select class="form-select" id="selBoard">
-					<option>문의게시판</option>
-				</select>
-			</div>
-			<div class="form-group">
 				<label for="exampleInputEmail1" class="form-label mt-4"></label> 
 				<input type="text" class="form-control" id="title1" name="a_title"
 					placeholder="제목을 입력하세요">
 			</div>
 			<div class="form-group">
 				<label for="exampleInputEmail1" class="form-label mt-4">파일첨부</label> 
-				<input type="file" class="form-control" id="fileName" name="fileName"
-					placeholder="제목을 입력하세요">
+				<input type="file" class="form-control" id="fileName" name="fileName">
 			</div>
 			<div class="form-group">
 				<label for="exampleTextarea" class="form-label mt-4"></label>
-				<!-- <textarea id="txtCon" class="form-control" rows="6" name="a_content"
-					placeholder="내용을 입력하세요"></textarea> -->
 				<textarea id="txtCon" class="form-control" rows="6" name="a_content"
 					 ></textarea>
 			</div>
 			<br><br>
 			<input type="hidden" class="form-control" id="userid" name="userid" value="admin">
 			<button id="sub1" type="submit" class="btn btn-dark">작성</button>
-			<button id="reset1" type="reset" class="btn btn-dark">다시쓰기</button>
 			<button id="btn1" type="button" class="btn btn-dark">목록</button>
 		</fieldset>
 	</form>

@@ -63,15 +63,14 @@
 								<td style="text-align: left"><a
 									href="<c:url value='/askBoard/askDetail?no=${vo.askNo}'/>">
 										${vo.a_title }</a></td>
-								<c:if test="${vo.sys==1 }">
+								<c:if test="${g_vo.sys==1 }">
 									<td>${vo.name }</td>
 								</c:if>
-								<c:if test="${vo.sys!=1 }">
+								<c:if test="${g_vo.sys!=1 }">
 									<td>${vo.guestNo }</td>
 								</c:if>
 								<td><fmt:formatDate value="${vo.a_regdate }"
 										pattern="yyyy-MM-dd" /></td>
-								<td>${vo.readcount}</td>
 							</tr>
 						</c:if>
 					</c:forEach>

@@ -22,8 +22,8 @@ public class AskBoardDAO {
 	 * @throws SQLExceptions
 	 */
 	public int insert(AskBoardVO vo) {
-		String sql = "insert into askboard(guestno, a_title, a_content)" + " values( ?, ?, ?)";
-		int cnt = jdbcTemplate.update(sql, vo.getGuestNo(), vo.getA_title(), vo.getA_content());
+		String sql = "insert into askboard(guestno, a_title, a_content,filename, originalFilename,filesize)" + " values( ?, ?, ?, ?, ?, ?)";
+		int cnt = jdbcTemplate.update(sql, vo.getGuestNo(), vo.getA_title(), vo.getA_content(), vo.getFileName(), vo.getOriginalFileName(), vo.getFileSize());
 		
 		return cnt;
 	}
@@ -35,7 +35,7 @@ public class AskBoardDAO {
 	 * @throws SQLException
 	 */
 	public List<AskBoardVO> selectAll(String condition, String keyword) {
-		String sql = "select * from askboard";
+		String sql = "select askNo, guestno, a_title, a_content, filename, originalFilename, a_regdate from askboard";
 		// 검색의 경우
 		if (keyword != null && !keyword.isEmpty()) {
 			sql += " where " + condition + " like '%" + keyword + "%'";

@@ -3,8 +3,7 @@
 	pageEncoding="utf-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<jsp:include page="../inc/top.jsp"></jsp:include>
-<%-- <%@ include file = "../login/checkLogin.jsp" %> --%>
+<c:import url="/inc/top"></c:import>
 
 <!DOCTYPE html>
 <html>
@@ -67,18 +66,18 @@ textarea{
 <script type="text/javascript">
 	$(function(){
 		$('#btnUpdate').click(function(){
-			location.href="<%=request.getContextPath() %>/askBoard/askEdit.jsp?askno=<%=askno %>";
+			location.href="/askBoard/askEdit?askno=${askno}";
 		});
 		$('#btnDelete').click(function(){
 			if(!confirm('해당 문의글을 삭제하시겠습니까?')){
 				event.preventDefault();
 			}else{
-				location.href="<%=request.getContextPath() %>/askBoard/askDelete_ok.jsp?askno=<%=askno %>";
+				location.href="/askBoard/askDelete?askno=${askno}";
 			}
 		});
 		
 		$('#btnlist').click(function(){
-			location.href="<%=request.getContextPath() %>/askBoard/askBoardList.jsp";
+			location.href="/askBoard/askBoardList";
 		});
 		
 		
@@ -93,13 +92,13 @@ textarea{
 			<br><br>
 			<div class="bg-white rounded shadow-sm">
 				<div class="board_title">
-				<%=vo.getA_title() %>${vo.a_title }
+				${vo.a_title }
 				<!-- 클릭한 게시물 제목 보이기 -->
 				<span class="board_date"><fmt:formatDate value="${vo.a_regdate }" pattern ="yyyy-MM-dd HH:mm:ss"/> </span><!-- 게시글 날짜 -->
 				</div> 
 				<br><br>
 				<div class="board_info_box">
-					<textarea class="board_author" readonly><%=vo.getA_content() %></textarea><!-- 게시글 내용 -->
+					<textarea class="board_author" readonly>${vo.a_content }</textarea><!-- 게시글 내용 -->
 				</div>
 				<br>
 				<div class="board_content"></div>
@@ -122,11 +121,12 @@ textarea{
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
 		crossorigin="anonymous"></script>
-		
-<jsp:include page="commentsList.jsp?askno=<%=askno %>"></jsp:include>
-<%if(g_vo.getSys() != 1){ %>
-	<jsp:include page="commentsWrite.jsp?askno=<%=askno %>"></jsp:include>
-<%} %>
+<!-- 
+<c:import url="commentsList?askno=${askno }"></c:import>		
+<c:if test="${g_vo.sys ne 1 }">
+	<c:import url="commentsWrite?askno=${askno }"></c:import>		
+</c:if>
+ -->		
 <br><br><br>
 </body>
 
