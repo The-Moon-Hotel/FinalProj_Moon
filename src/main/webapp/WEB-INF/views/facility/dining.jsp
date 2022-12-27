@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<jsp:include page="../inc/top.jsp"></jsp:include>
-<link rel="stylesheet" href="../css/facility.css">
- <link rel="stylesheet" href="../css/fac_Detail.css">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:import url="/inc/top"></c:import>
+<link rel="stylesheet" href="/css/facility.css">
+<link rel="stylesheet" href="/css/fac_Detail.css">
 
 
 <style>
@@ -14,10 +15,10 @@
 </style>
 <section class = "faci">
 	<span>
-		<a href="<%=request.getContextPath() %>/facility/facility.jsp">
+		<a href="/facility/facility">
 			<input type="button" value="부대시설" class="btn btn-dark">
 		</a>
-		<a href="<%=request.getContextPath() %>/facility/dining.jsp">
+		<a href="/facility/dining">
 			<input type="button" value="다이닝" class="btn btn-dark">	
 		</a>
 	</span>

@@ -66,13 +66,13 @@ textarea{
 <script type="text/javascript">
 	$(function(){
 		$('#btnUpdate').click(function(){
-			location.href="/askBoard/askEdit?askno=${askno}";
+			location.href="/askBoard/askEdit?askNo="+${vo.askNo};
 		});
 		$('#btnDelete').click(function(){
 			if(!confirm('해당 문의글을 삭제하시겠습니까?')){
 				event.preventDefault();
 			}else{
-				location.href="/askBoard/askDelete?askno=${askno}";
+				location.href="/askBoard/askDelete?askNo="+${vo.askNo};
 			}
 		});
 		

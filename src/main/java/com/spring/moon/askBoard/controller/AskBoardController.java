@@ -25,6 +25,8 @@ import com.spring.moon.common.PagingVO;
 import com.spring.moon.common.UtilMgr;
 import com.spring.moon.askBoard.model.AskBoardVO;
 import com.spring.moon.askBoard.model.AskboardService;
+import com.spring.moon.askBoard.model.CommentService;
+import com.spring.moon.askBoard.model.CommentVO;
 import com.spring.moon.guest.model.GuestService;
 import com.spring.moon.guest.model.GuestVO;
 
@@ -48,6 +50,9 @@ public class AskBoardController {
 
 	@Autowired
 	GuestService guestService;
+	
+	@Autowired
+	CommentService commentService;
 
 //////////////////////////////G E T 방식 /////////////////////////////////////////////////////////////////////////////////////////	
 	// 문의게시판 글쓰기 화면 보기
@@ -137,7 +142,32 @@ public class AskBoardController {
 		mav.setViewName("askBoard/askDetail");
 		return mav;
 	}
+	// 문의게시판 글수정 화면 보기
+		@GetMapping("/askBoard/askEdit")
+		public ModelAndView askEdit(HttpServletRequest request,@RequestParam int askNo) {
+			
+			HttpSession session = request.getSession();
+			String userid=(String)session.getAttribute("userid");
+			ModelAndView mav = new ModelAndView();
+			AskBoardVO vo =  this.askboardService.selectByAskNo(askNo);
+			mav.addObject("userid", userid);
+			mav.addObject("vo", vo);
+			mav.setViewName("askBoard/askEdit");
 
+			return mav;
+		}
+		
+		@GetMapping("/askBoard/commentsWrite")
+		public ModelAndView commentsWrite(HttpServletRequest request) {			
+			ModelAndView mav = new ModelAndView();
+			HttpSession session = request.getSession();
+			String userid=(String)session.getAttribute("userid");
+			
+			mav.addObject("userid", userid);
+			mav.setViewName("askBoard/commentsWrite");
+
+			return mav;
+		}
 ////////////////////////////// P O S T 방식 ///////////////////////////////////////////////////////////////////////////////////	
 	@PostMapping("/askBoard/askWrite")
 	public ModelAndView writePost(HttpServletRequest request, @RequestParam Map<String, Object> map)
@@ -190,6 +220,66 @@ public class AskBoardController {
 		mav.addObject("msg", msg);
 		mav.addObject("url", url);
 		mav.setViewName("common/message");
+		return mav;
+	}
+	// 문의게시판 글수정 화면 보기
+	@PostMapping("/askBoard/askEdit")
+	public ModelAndView askEditPost(HttpServletRequest request,@RequestParam Map<String,Object> map) {
+		ModelAndView mav = new ModelAndView();
+		
+		String a_title = (String) map.get("a_title");
+		String a_content = (String) map.get("a_content");
+		String askno = (String) map.get("askno");
+
+		AskBoardVO vo = new AskBoardVO();
+
+		vo.setA_title(a_title);
+		vo.setA_content(a_content);
+		vo.setAskNo(Integer.parseInt(askno));
+
+		int cnt = this.askboardService.updateAskboard(vo);
+		String msg = "", url = "";
+		if (cnt > 0) {
+			msg = "문의글이 수정되었습니다.";
+			url = "askDetail.jsp?askno="+askno;
+		} else {
+			msg = "문의글 수정 실패!";
+			url = "javascript:history.back()";
+		}
+		mav.addObject("msg", msg);
+		mav.addObject("url", url);
+		mav.setViewName("common/message");
+		return mav;
+	}
+	@PostMapping("/askBoard/commentsWrite")
+	public ModelAndView commentsWritePost(HttpServletRequest request,@RequestParam Map<String,Object> map) {			
+		ModelAndView mav = new ModelAndView();
+		HttpSession session = request.getSession();
+		String userid=(String)session.getAttribute("userid");
+
+		GuestVO vo = this.guestService.selectByUserid(userid);
+
+		String askNo = (String)map.get("askNo");
+		String content = (String)map.get("c_content");
+
+		CommentVO c_vo = new CommentVO();
+		
+		c_vo.setName(vo.getName());
+		c_vo.setContent(content);
+		c_vo.setAskno(Integer.parseInt(askNo));
+		int cnt = this.commentService.insertcomment(c_vo);
+		String msg = "", url = "";
+		if (cnt > 0) {
+			msg = "문의글이 수정되었습니다.";
+			url = "/askBoard/askDetail?askno="+askNo;
+		} else {
+			msg = "답변 등록 실패!";
+			url = "javascript:history.back()";
+		}	
+		mav.addObject("msg", msg);
+		mav.addObject("url", url);
+		mav.setViewName("common/message");
+
 		return mav;
 	}
 }

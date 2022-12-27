@@ -40,7 +40,7 @@ public class AskBoardDAO {
 		if (keyword != null && !keyword.isEmpty()) {
 			sql += " where " + condition + " like '%" + keyword + "%'";
 		}
-		sql += " order by askno desc";
+		sql += " order by askNo desc";
 		List<AskBoardVO> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<AskBoardVO>(AskBoardVO.class));
 		
 		return list;
@@ -53,8 +53,8 @@ public class AskBoardDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public AskBoardVO selectByAskNo(int askno) {
-		String sql = "select * from askboard where askno =" + askno;
+	public AskBoardVO selectByAskNo(int askNo) {
+		String sql = "select * from askboard where askNo =" + askNo;
 		AskBoardVO vo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<AskBoardVO>(AskBoardVO.class));
 		
 		return vo;
@@ -68,7 +68,7 @@ public class AskBoardDAO {
 	 * @throws SQLException
 	 */
 	public int updateAskboard(AskBoardVO vo) {
-		String sql = "update askboard" + " set a_title = ?, a_content = ?" + " where askno = ?";
+		String sql = "update askboard" + " set a_title = ?, a_content = ?" + " where askNo = ?";
 		int cnt = jdbcTemplate.update(sql, vo.getA_title(), vo.getA_content(), vo.getAskNo());
 		
 		return cnt;
@@ -77,14 +77,14 @@ public class AskBoardDAO {
 	/**
 	 * 문의글 delete
 	 * 
-	 * @param askno
+	 * @param askNo
 	 * @param pwd
 	 * @return
 	 * @throws SQLException
 	 */
-	public int deleteAskboard(int askno){
-		String sql = "delete from askboard where askno = ?";
-		int cnt = jdbcTemplate.update(sql, askno);
+	public int deleteAskboard(int askNo){
+		String sql = "delete from askboard where askNo = ?";
+		int cnt = jdbcTemplate.update(sql, askNo);
 		
 		return cnt;
 	}
@@ -97,7 +97,7 @@ public class AskBoardDAO {
 	 * @throws SQLException
 	 */
 	public List<AskBoardVO> selectByGuestno(int guestno){
-		String sql = "select * from askboard where guestno = " + guestno + " order by askno desc";
+		String sql = "select * from askboard where guestno = " + guestno + " order by askNo desc";
 		List<AskBoardVO> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<AskBoardVO>(AskBoardVO.class));
 
 		return list;

@@ -127,8 +127,8 @@
 						<c:if test="${map.condition=='a_content' }">
 	            		selected="selected"
 	            	</c:if>>내용</option>
-					<option value="askno"
-						<c:if test="${map.condition=='askno' }">
+					<option value="askNo"
+						<c:if test="${map.condition=='askNo' }">
 		            		selected="selected"
 		            </c:if>>고객번호</option>
 				</select> <input type="text" name="keyword" title="검색어 입력"

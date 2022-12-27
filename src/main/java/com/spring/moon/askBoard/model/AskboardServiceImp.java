@@ -37,13 +37,13 @@ public class AskboardServiceImp implements AskboardService{
 	
 	/**
 	 * 문의글 상세보기
-	 * @param askno
+	 * @param askNo
 	 * @return
 	 * @throws SQLException
 	 */
 	@Override
-	public AskBoardVO selectByAskNo(int askno) {
-		return dao.selectByAskNo(askno);
+	public AskBoardVO selectByAskNo(int askNo) {
+		return dao.selectByAskNo(askNo);
 	}
 	
 	/**
