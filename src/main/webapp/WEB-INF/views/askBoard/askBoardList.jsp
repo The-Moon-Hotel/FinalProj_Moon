@@ -61,7 +61,7 @@
 							<tr style="text-align: center">
 								<td>${vo.askNo}</td>
 								<td style="text-align: left"><a
-									href="<c:url value='/askBoard/askDetail?no=${vo.askNo}'/>">
+									href="<c:url value='/askBoard/askDetail?askNo=${vo.askNo}'/>">
 										${vo.a_title }</a></td>
 								<c:if test="${g_vo.sys==1 }">
 									<td>${vo.name }</td>

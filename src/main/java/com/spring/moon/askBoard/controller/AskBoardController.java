@@ -129,13 +129,13 @@ public class AskBoardController {
 	}
 
 	@GetMapping("/askBoard/askDetail")
-	public ModelAndView askDetail(HttpServletRequest request, @RequestParam int no) {
+	public ModelAndView askDetail(HttpServletRequest request, @RequestParam int askNo) {
 		ModelAndView mav = new ModelAndView();
 		HttpSession session = request.getSession();
 		String userid = (String) session.getAttribute("userid");
 		GuestVO g_vo = guestService.selectByUserid(userid);
 
-		AskBoardVO vo = this.askboardService.selectByAskNo(no);
+		AskBoardVO vo = this.askboardService.selectByAskNo(askNo);
 
 		mav.addObject("sys", g_vo.getSys());
 		mav.addObject("vo", vo);
@@ -158,15 +158,39 @@ public class AskBoardController {
 		}
 		
 		@GetMapping("/askBoard/commentsWrite")
-		public ModelAndView commentsWrite(HttpServletRequest request) {			
+		public ModelAndView commentsWrite(HttpServletRequest request,@RequestParam int askNo) {			
 			ModelAndView mav = new ModelAndView();
 			HttpSession session = request.getSession();
 			String userid=(String)session.getAttribute("userid");
 			
+			mav.addObject("askNo", askNo);
 			mav.addObject("userid", userid);
 			mav.setViewName("askBoard/commentsWrite");
 
 			return mav;
+		}
+		// 글 목록 불러오기
+		@RequestMapping(value = "/askBoard/commentsList")
+		public ModelAndView commentsList(HttpServletRequest request, @RequestParam int askNo) {
+			ModelAndView mav = new ModelAndView();
+			HttpSession session = request.getSession();
+			String userid = (String) session.getAttribute("userid");
+			
+			GuestVO g_vo = null;
+			if (userid != null && !userid.isEmpty()) {
+				g_vo = guestService.selectByUserid(userid);
+			}
+			System.out.println("askNo="+askNo);
+			System.out.println("회원 or 관리자= "+g_vo.getSys());
+			List<CommentVO> list = this.commentService.selectComment(askNo);
+			
+			mav.addObject("list", list);
+			mav.addObject("sys", g_vo.getSys());
+
+			mav.setViewName("askBoard/commentsList");
+
+			return mav;
+
 		}
 ////////////////////////////// P O S T 방식 ///////////////////////////////////////////////////////////////////////////////////	
 	@PostMapping("/askBoard/askWrite")
@@ -251,7 +275,7 @@ public class AskBoardController {
 		mav.setViewName("common/message");
 		return mav;
 	}
-	@PostMapping("/askBoard/commentsWrite")
+	@PostMapping("/askBoard/commentWrite")
 	public ModelAndView commentsWritePost(HttpServletRequest request,@RequestParam Map<String,Object> map) {			
 		ModelAndView mav = new ModelAndView();
 		HttpSession session = request.getSession();
@@ -260,18 +284,19 @@ public class AskBoardController {
 		GuestVO vo = this.guestService.selectByUserid(userid);
 
 		String askNo = (String)map.get("askNo");
+		System.out.println("askNo="+askNo);
 		String content = (String)map.get("c_content");
 
 		CommentVO c_vo = new CommentVO();
 		
 		c_vo.setName(vo.getName());
 		c_vo.setContent(content);
-		c_vo.setAskno(Integer.parseInt(askNo));
+		c_vo.setAskNo(Integer.parseInt(askNo));
 		int cnt = this.commentService.insertcomment(c_vo);
 		String msg = "", url = "";
 		if (cnt > 0) {
-			msg = "문의글이 수정되었습니다.";
-			url = "/askBoard/askDetail?askno="+askNo;
+			msg = "답변 등록되었습니다.";
+			url = "/askBoard/askDetail?askNo="+askNo;
 		} else {
 			msg = "답변 등록 실패!";
 			url = "javascript:history.back()";

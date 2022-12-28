@@ -44,7 +44,7 @@ public interface AskboardService {
 	 * @return
 	 * @throws SQLException
 	 */
-	int deleteAskboard(int askno) ;
+	int deleteAskboard(int askNo) ;
 	
 	/**
 	 * 회원별 문의글 조회

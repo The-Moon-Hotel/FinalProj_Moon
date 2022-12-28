@@ -15,7 +15,7 @@ public class CommentDAO {
 	
 	public List<CommentVO> selectComment(int askNo) {
 			String sql="select * from comments"
-					+ "	where askNo = ?";
+					+ "	where askNo = "+askNo;
 			List<CommentVO> list=jdbcTemplate.query(sql, new BeanPropertyRowMapper<CommentVO>(CommentVO.class));
 			return list;
 	}
@@ -30,7 +30,7 @@ public class CommentDAO {
 	public int insertcomment(CommentVO vo){
 			String sql="insert into comments(name, content, askno)"
 				+ " values( ?, ?, ?)";
-			int cnt=jdbcTemplate.update(sql, vo.getName(), vo.getContent(), vo.getAskno());
+			int cnt=jdbcTemplate.update(sql, vo.getName(), vo.getContent(), vo.getAskNo());
 			return cnt;
 	}
 	

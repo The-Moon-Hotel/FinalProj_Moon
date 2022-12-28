@@ -3,25 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <link rel="stylesheet" type="text/css" href="/css/sales.css">
-<%
-	String userid=(String)session.getAttribute("userid");
-	GuestVO g_vo = guestSerivce.selectByUserid(userid);
-%>
-<%
-	String askno = request.getParameter("askno");
-	List<CommentVO> list = null;
-	
-	CommentVO vo = new CommentVO();
-	CommentDAO dao = new CommentDAO();
-	try{
-		list = dao.selectComment(Integer.parseInt(askno));
-	
-	}catch(SQLException e){
-		e.printStackTrace();
-	}
-	
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-%>
+
 
 
 <style>
@@ -47,7 +29,7 @@
 <div class="co_list">
 	<h4 style="margin-left: 90px">답글</h4>
 	<div class="tableSize">
-		<input type="hidden" id="askno" name="askno" value="<%=askno%>${askNo}">
+		<input type="hidden" id="askNo" name="askNo" value="${askNo}">
 		<table class="table">
 			<thead>
 				<tr>
@@ -95,7 +77,7 @@
 				event.preventDefault();
 			}else{
 				location.href
-					="/askBoard/commentDelete_ok.jsp?no=<%=vo.getNo() %>${vo.no}";
+					="/askBoard/commentDelete?no="/* +${vo.no} */;
 			}
 		});
 	});

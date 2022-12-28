@@ -25,7 +25,7 @@
 <form name="c_Write" method="post" action="/askBoard/commentWrite" >
 <fieldset style="width: 500px; margin: 10;">
 	
-	<input type="hidden" name="askno" value="${askNo}">
+	<input type="hidden" name="askNo" value="${askNo}">
 	<input type="hidden" name="userid" value="${userid}">
 	
         <div >  

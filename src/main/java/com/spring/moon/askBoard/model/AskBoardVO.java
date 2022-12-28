@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class AskBoardVO {
+	private int no;
 	private int askNo;
 	private int guestNo;
 	private String a_title;

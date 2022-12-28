@@ -64,8 +64,8 @@ public class AskboardServiceImp implements AskboardService{
 	 * @throws SQLException
 	 */
 	@Override
-	public int deleteAskboard(int askno){
-		return dao.deleteAskboard(askno);
+	public int deleteAskboard(int askNo){
+		return dao.deleteAskboard(askNo);
 	}
 	
 	/**
