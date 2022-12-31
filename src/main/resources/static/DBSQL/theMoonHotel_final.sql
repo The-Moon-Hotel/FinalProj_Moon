@@ -195,7 +195,7 @@ CREATE UNIQUE INDEX PK_facilityInfo
 		facInfoNo ASC
 	);
 
-ALTER TABLE facilityInfoguest
+ALTER TABLE facilityInfo
 	ADD
 		CONSTRAINT PK_facilityInfo
 		PRIMARY KEY (
@@ -312,7 +312,7 @@ ALTER TABLE reviewBoard
 			guestNo
 		);
 
-ALTER TABLE askboardaskBoard
+ALTER TABLE askboard
 	ADD
 		CONSTRAINT FK_guest_TO_askBoard
 		FOREIGN KEY (

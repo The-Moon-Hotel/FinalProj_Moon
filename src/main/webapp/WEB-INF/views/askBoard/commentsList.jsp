@@ -77,7 +77,7 @@
 				event.preventDefault();
 			}else{
 				location.href
-					="/askBoard/commentDelete?no="/* +${vo.no} */;
+					="/askBoard/commentDelete?no="+${vo.no}+"$askNo="+${askNo};
 			}
 		});
 	});

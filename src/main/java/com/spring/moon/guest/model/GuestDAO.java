@@ -1,14 +1,11 @@
 package com.spring.moon.guest.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
+
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,22 +25,26 @@ public class GuestDAO {
 
 	// 중복확인
 	public int duplicateUserid(String userid)  {
-		String sql = "select count(*) from guest where userid="+userid;
-		int res = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Integer>());
-		
+		String sql = "select count(*) as res from guest where userid=?";
+		Map<String, Object> map = jdbcTemplate.queryForMap(sql, userid);
+		int res= Integer.parseInt(map.get("res").toString());
 		return res;
 	}
 
 	// 로그인
 	public GuestVO loginCheck(String userid, String pwd)  {
-		String sql = "select pwd from guest where userid = '"+userid+"' and outdate is null";
-		GuestVO guestVo = jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<GuestVO>(GuestVO.class));		
-		return guestVo;
+		String sql = "select pwd from guest where userid = '"+userid+"' and outdate is null limit 1";
+		try {
+			GuestVO guestVo = jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
+			return guestVo;
+		}catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	// 회원정보 페이지에 회원정보 불러올때
 	public GuestVO selectByUserid(String userid)  {
-		String sql = "select * from guest where userid ='"+userid+"'limit 1";
+		String sql = "select * from guest where userid ='"+userid+"' ";
 		GuestVO	guestVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
 		
 		return guestVo;
@@ -65,7 +66,7 @@ public class GuestDAO {
 
 	// 회원탈퇴
 	public int OutGuset(String userid, String pwd)  {
-		String sql = "update guest set outdate=sysdate where userid=? and pwd=?";
+		String sql = "update guest set outdate=now() where userid=? and pwd=?";
 		int cnt=jdbcTemplate.update(sql,userid,pwd);
 		return cnt;
 	}

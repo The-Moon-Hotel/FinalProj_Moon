@@ -27,7 +27,8 @@ public class IncController {
 		
 		boolean t_login=false;
 		int GuestOrAdmin=GuestService.GUEST_ACCOUNT;
-		GuestVO guestVo=new GuestVO();
+		int GUEST_ACCOUNT=GuestService.GUEST_ACCOUNT;
+		GuestVO guestVo=null;
 		if(t_userid!=null&& !t_userid.isEmpty()){
 			t_login=true;
 			guestVo=guestSerivce.selectByUserid(t_userid);
@@ -42,6 +43,7 @@ public class IncController {
 		mav.addObject("guestVo",guestVo);
 		mav.addObject("t_login",t_login);
 		mav.addObject("GuestOrAdmin",GuestOrAdmin);
+		mav.addObject("GUEST_ACCOUNT",GUEST_ACCOUNT);
 		mav.setViewName("inc/top");
 		return mav;
 	}

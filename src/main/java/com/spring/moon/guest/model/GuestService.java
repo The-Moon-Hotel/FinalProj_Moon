@@ -6,7 +6,7 @@ import java.util.List;
 public interface GuestService {
 	//아이디 중복확인 상수
 	public static final int EXIST_ID=1;	//존재하는 아이디=>사용불가
-	public static final int NOT_EXIST_ID=2;// 존재하지 않는 아이디 => 사용가능
+	public static final int NOT_EXIST_ID=0;// 존재하지 않는 아이디 => 사용가능
 	
 	//로그인 할때 상수
 	public static final int LOGIN_OK=1;	//로그인 성공 

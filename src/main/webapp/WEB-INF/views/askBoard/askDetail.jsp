@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -8,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
@@ -62,7 +61,7 @@ textarea{
 	overflow: hidden;
 }
 </style>
-<script type="text/javascript"src="../js/jquery-3.6.1.min.js"></script>
+<script type="text/javascript"src="/js/jquery-3.6.1.min.js"></script>
 <script type="text/javascript">
 	$(function(){
 		$('#btnUpdate').click(function(){
@@ -108,9 +107,10 @@ textarea{
 			<div style="margin-top: 20px">
 				<br>
 				<br>
-				
-				<button type="button" class="btn btn-dark" id="btnUpdate">수정</button>
-				<button type="button" class="btn btn-dark" id="btnDelete">삭제</button>
+				<c:if test="${guestNo==vo.guestNo }">
+					<button type="button" class="btn btn-dark" id="btnUpdate">수정</button>
+					<button type="button" class="btn btn-dark" id="btnDelete">삭제</button>
+				</c:if>
 				<button type="button" class="btn btn-dark" id="btnlist">목록</button>
 				<br><br><br>
 				

@@ -30,8 +30,6 @@ import com.spring.moon.askBoard.model.CommentVO;
 import com.spring.moon.guest.model.GuestService;
 import com.spring.moon.guest.model.GuestVO;
 
-import com.oreilly.servlet.MultipartRequest;
-import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 @Controller
 public class AskBoardController {
@@ -75,7 +73,7 @@ public class AskBoardController {
 			@RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
 		HttpSession session = request.getSession();
 		String userid = (String) session.getAttribute("userid");
-		System.out.println("글 목록 불러오기 map=" + map.get("keyword") +map.get("condition"));
+		System.out.println("글 목록 불러오기 map.get(\"keyword\")=" + map.get("keyword") +map.get("condition"));
 		GuestVO g_vo = new GuestVO();
 		if (userid != null && !userid.isEmpty()) {
 			g_vo = guestService.selectByUserid(userid);
@@ -85,6 +83,7 @@ public class AskBoardController {
 		System.out.println("회원 or 관리자= "+g_vo.getSys());
 		// 일반회원이라면 (sys==1)
 		if (g_vo.getSys() == 1) {
+			System.out.println("일반회원 guestNo="+g_vo.getGuestNo());
 			list = this.askboardService.selectByGuestno(g_vo.getGuestNo());
 			// 관리자라면
 		} else {
@@ -137,6 +136,7 @@ public class AskBoardController {
 
 		AskBoardVO vo = this.askboardService.selectByAskNo(askNo);
 
+		mav.addObject("guestNo", g_vo.getGuestNo());
 		mav.addObject("sys", g_vo.getSys());
 		mav.addObject("vo", vo);
 		mav.setViewName("askBoard/askDetail");
@@ -156,6 +156,27 @@ public class AskBoardController {
 
 			return mav;
 		}
+		// 문의게시판 글삭제 화면 보기
+		@GetMapping("/askBoard/askDelete")
+		public ModelAndView askDelete(HttpServletRequest request,@RequestParam int askNo) {
+			
+			ModelAndView mav = new ModelAndView();
+			int c_cnt =  this.commentService.deleteAskNoComment(askNo);
+			int cnt =  this.askboardService.deleteAskboard(askNo);
+			String msg = "", url = "";
+			if (cnt > 0) {
+				msg = "문의게시글 삭제되었습니다.";
+				url = "/askBoard/askBoardList";
+			} else {
+				msg = "문의게시글 삭제 실패!";
+				url = "javascript:history.back()";
+			}	
+			mav.addObject("msg", msg);
+			mav.addObject("url", url);
+			mav.setViewName("common/message");
+			
+			return mav;
+		}
 		
 		@GetMapping("/askBoard/commentsWrite")
 		public ModelAndView commentsWrite(HttpServletRequest request,@RequestParam int askNo) {			
@@ -169,7 +190,7 @@ public class AskBoardController {
 
 			return mav;
 		}
-		// 글 목록 불러오기
+		// 댓글 목록 불러오기
 		@RequestMapping(value = "/askBoard/commentsList")
 		public ModelAndView commentsList(HttpServletRequest request, @RequestParam int askNo) {
 			ModelAndView mav = new ModelAndView();
@@ -191,6 +212,28 @@ public class AskBoardController {
 
 			return mav;
 
+		}
+		// 댓글 삭제
+		@RequestMapping(value = "/askBoard/commentDelete")
+		public ModelAndView commentsDelete(@RequestParam int no, @RequestParam int askNo) {
+			ModelAndView mav = new ModelAndView();
+			
+			int cnt = this.commentService.deleteComment(no);
+			
+			String msg = "", url = "";
+			if (cnt > 0) {
+				msg = "답변 등록되었습니다.";
+				url = "/askBoard/askDetail?askNo="+askNo;
+			} else {
+				msg = "답변 등록 실패!";
+				url = "javascript:history.back()";
+			}	
+			mav.addObject("msg", msg);
+			mav.addObject("url", url);
+			mav.setViewName("common/message");
+			
+			return mav;
+			
 		}
 ////////////////////////////// P O S T 방식 ///////////////////////////////////////////////////////////////////////////////////	
 	@PostMapping("/askBoard/askWrite")
@@ -219,9 +262,8 @@ public class AskBoardController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		String userid = (String) map.get("userid");
-		GuestVO vo = guestService.selectByUserid(userid);
+		System.out.println("userid="+map.get("userid").toString());
+		GuestVO vo = guestService.selectByUserid(map.get("userid").toString());
 
 		AskBoardVO askBoardVO = new AskBoardVO();
 		askBoardVO.setGuestNo(vo.getGuestNo());

@@ -24,5 +24,10 @@ public class CommentServiceImp implements CommentService{
 	public int deleteComment(int no) {
 		return this.commentDAO.deleteComment(no);
 	}
+
+	@Override
+	public int deleteAskNoComment(int askNo) {
+		return this.commentDAO.deleteAskNoComment(askNo);
+	}
 	
 }

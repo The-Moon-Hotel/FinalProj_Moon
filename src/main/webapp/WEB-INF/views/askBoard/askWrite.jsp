@@ -72,7 +72,7 @@ textarea{
 					 ></textarea>
 			</div>
 			<br><br>
-			<input type="hidden" class="form-control" id="userid" name="userid" value="admin">
+			<input type="hidden" class="form-control" id="userid" name="userid" value="${userid}">
 			<button id="sub1" type="submit" class="btn btn-dark">작성</button>
 			<button id="btn1" type="button" class="btn btn-dark">목록</button>
 		</fieldset>

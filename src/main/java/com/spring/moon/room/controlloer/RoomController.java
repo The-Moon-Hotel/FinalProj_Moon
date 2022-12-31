@@ -1,4 +1,4 @@
-package com.spring.moon.room;
+package com.spring.moon.room.controlloer;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

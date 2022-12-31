@@ -39,14 +39,18 @@ public class GuestServiceImp implements GuestService{
 		@Override
 		public int loginCheck(String userid, String pwd) {
 			GuestVO guestVO=this.guestDAO.loginCheck(userid, pwd);
-			
-			String dbPwd=guestVO.getPwd();
 			int result=0;
-			if(pwd.equals(dbPwd)) {
-				result=GuestService.LOGIN_OK;
+			if(guestVO!=null) {
+				String dbPwd=guestVO.getPwd();
+				if(pwd.equals(dbPwd)) {
+					result=GuestService.LOGIN_OK;
+				}else {
+					result=GuestService.DISAGREE_PWD;
+				}
 			}else {
-				result=GuestService.DISAGREE_PWD;
+				result=GuestService.NONE_USERID;
 			}
+			
 			return result;
 		}
 		//회원정보 페이제에 회원정보 불러올때
