@@ -16,11 +16,11 @@ public class SalesDAO {
 	public List<SalesVO2> salesByLocNo(String d1, String d2, String locName) {
 
 		String sql = "select locname, roomtype, roomprice, ci_date,"
-				+ " count(*) as quantity, sum(roomprice) as salsePrice" + " from v_room_sales"
-				+ " where ci_date between ? and  ?";
+				+ " count(*) as quantity, sum(roomPrice) as room_total_Price" + " from v_room_sales"
+				+ " where ci_date between '"+d1+"' and  '"+d2+"'";
 
 		if (!locName.equals("all")) {
-			sql += " and locname" + " =  ? ";
+			sql += " and locname =  '"+locName+"' ";
 		}
 
 		sql += " group by locname, roomtype,  roomprice, ci_date" + " order by locname, ci_date ";

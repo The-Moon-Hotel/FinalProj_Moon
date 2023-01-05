@@ -49,7 +49,7 @@
 				<br>
 				<div id="map1" style="width:100%;height:350px;"></div>
 
-				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8ebbd73d94acac44304a8ef67b2d3457"></script>
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=93bf7c10cf6280b4b491009456fe786b"></script>
 				<script>
 				var mapContainer = document.getElementById('map1'), // 지도를 표시할 div 
 				    mapOption = { 
@@ -99,7 +99,7 @@
 				<br>
 				<div id="map2" style="width:100%;height:350px;"></div>
 
-				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8ebbd73d94acac44304a8ef67b2d3457"></script>
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=93bf7c10cf6280b4b491009456fe786b"></script>
 				<script>
 				var mapContainer = document.getElementById('map2'), // 지도를 표시할 div 
 				    mapOption = { 
@@ -152,7 +152,7 @@
 				<br>
 				<div id="map3" style="width:100%;height:350px;"></div>
 
-				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8ebbd73d94acac44304a8ef67b2d3457"></script>
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=93bf7c10cf6280b4b491009456fe786b"></script>
 				<script>
 				var mapContainer = document.getElementById('map3'), // 지도를 표시할 div 
 				    mapOption = { 

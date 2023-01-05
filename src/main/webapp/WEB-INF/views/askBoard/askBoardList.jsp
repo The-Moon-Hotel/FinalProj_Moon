@@ -121,8 +121,9 @@
 				<select name="condition">
 					<option value="a_title"
 						<c:if test="${map.condition=='a_title' }">
-	            		selected="selected"
-	            </c:if>>제목</option>
+		            		selected="selected"
+		            </c:if>
+		            >제목</option>
 					<option value="a_content"
 						<c:if test="${map.condition=='a_content' }">
 	            		selected="selected"

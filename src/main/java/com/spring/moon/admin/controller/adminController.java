@@ -354,6 +354,9 @@ public class adminController {
 					date2="";
 				}
 			}
+			mav.addObject("sum", sum);
+			mav.addObject("sum1", sum1);
+			mav.addObject("st", st);
 			mav.addObject("list", list);
 			mav.addObject("list1", list1);
 			mav.addObject("branchType", branchType);
@@ -390,4 +393,5 @@ public class adminController {
 		return mav;
 	}
 	*/
+	
 }
