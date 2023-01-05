@@ -39,7 +39,7 @@
 				<br>
 				<input type="button" value="객실 어메니티 보기"
 				style="background:#7B725E;color:white"; cursor:pointer
-			onclick="window.open('amenity.jsp','asdfo8or','scrollbars=yes, width=750,height=580,top=250,left=800');">
+			onclick="window.open('/room/amenity','asdfo8or','scrollbars=yes, width=750,height=580,top=250,left=800');">
 				</div>
 				
 				
@@ -81,7 +81,7 @@
 				</div>
 				
 				<div class="right_box"> 
-					<a href ="<%=request.getContextPath() %>/askBoard/askWrite.jsp">
+					<a href ="/askBoard/askWrite">
 						<input type="button" value="문의하기" style="background:#7B725E;color:white">
 					</a>
 					<br><br>

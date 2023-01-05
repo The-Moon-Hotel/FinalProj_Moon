@@ -90,7 +90,7 @@
 					<p class="roomtype">
 						<b>수페리어</b>
 					</p>
-					<a href="supeDetail.jsp"> <input type="button" class="look"
+					<a href="/room/supeDetail"> <input type="button" class="look"
 						value="상세보기" style="left: 520px; top: 420px;">
 					</a>
 					<pre>   편안하고 아늑한 가장 기본적인 객실
@@ -105,7 +105,7 @@
 					<p class="roomtype">
 						<b>디럭스</b>
 					</p>
-					<a href="deluxeDetail.jsp"> <input type="button" class="look"
+					<a href="/room/deluxeDetail"> <input type="button" class="look"
 						value="상세보기" style="right: 8px; top: 310px;">
 					</a>
 					<pre>   이국적인 느낌의 안락한 객실
@@ -122,7 +122,7 @@
 					<p class="roomtype">
 						<b>스위트룸</b>
 					</p>
-					<a href="suitDetail.jsp"> <input type="button" class="look"
+					<a href="/room/suitDetail"> <input type="button" class="look"
 						value="상세보기" style="left: 520px; bottom: 150px;">
 					</a>
 					<pre>   여유로운 공간감이 느껴지는 객실	
@@ -138,7 +138,7 @@
 					<p class="roomtype">
 						<b>모노그램 스위트</b>
 					</p>
-					<a href="monoDetail.jsp"> <input type="button" class="look"
+					<a href="/room/monoDetail"> <input type="button" class="look"
 						value="상세보기" style="right: 8px; bottom: 150px;">
 					</a>
 					<pre>   파라마노처럼 펼처진 바다를 바라볼 수 있는 객실
