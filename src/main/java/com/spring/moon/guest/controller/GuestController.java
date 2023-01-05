@@ -159,6 +159,40 @@ public class GuestController {
 		}
 		return mav;
 	}
+	@GetMapping("/guest/myReservDetail")
+	public ModelAndView myReservDetail(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		HttpSession session = request.getSession();
+		String userid = (String) session.getAttribute("userid");
+		
+		if (userid == null) {
+			String msg = "로그아웃 되었습니다.", url = "/login/login";
+			mav.addObject("msg", msg);
+			mav.addObject("url", url);
+			mav.setViewName("common/message");
+		} else {
+			mav.addObject("userid", userid);
+			mav.setViewName("guest/myReservDetail");
+		}
+		return mav;
+	}
+	@GetMapping("/guest/myReservList")
+	public ModelAndView myReservList(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		HttpSession session = request.getSession();
+		String userid = (String) session.getAttribute("userid");
+		
+		if (userid == null) {
+			String msg = "로그아웃 되었습니다.", url = "/login/login";
+			mav.addObject("msg", msg);
+			mav.addObject("url", url);
+			mav.setViewName("common/message");
+		} else {
+			mav.addObject("userid", userid);
+			mav.setViewName("guest/myReservList");
+		}
+		return mav;
+	}
 	//////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////P O S T/////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////

@@ -30,6 +30,11 @@
 </style>
 <script type="text/javascript">
 	$(function(){
+		$('#locName_val').change(function(){
+			var str=$('#locName_val option:selected').val();
+			$('#locName').val(str);	
+		});	
+		
 		$('#submitBtn').click(function(){
 			const checkin = new Date($('#ci_date').val());//2022-02-03
 			const checkout = new Date($('#co_date').val());//2022-02-04
@@ -53,7 +58,7 @@
 	</table>
 
 	<div>
-		<form name="reservForm" method="post" action="/reservRoom/reservation2">
+		<form name="reservForm" method="post" action="/reservRoom/reservation1">
 			<table class="reserv1" style="width: 900px" align="center">
 				<tr style="color: black; font-weight: bold;">
 					<td>지점</td>
@@ -64,7 +69,9 @@
 				</tr>
 				<tr>
 					<td>
-						<select name="locName">
+						<input type="hidden" name="locName" id="locName">
+						<select name="locName_val" id="locName_val">
+							<option >----지점 선택----</option>
 							<option value="Full Moon">Full Moon</option>
 							<option value="Half Moon">Half Moon</option>
 							<option value="Crescent Moon">Crescent Moon</option>

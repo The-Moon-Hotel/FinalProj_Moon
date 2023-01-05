@@ -1,6 +1,7 @@
 package com.spring.moon.reservRoom.model;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface ReservationService {
@@ -16,17 +17,20 @@ public interface ReservationService {
 	
 	//회원번호를 매개변수로 모든 예약 조회 검색하기
 	 List<ReservationVO> selectAllReserv(int guestNo);
-	
+	 
+	// 회원번호를 매개변수로 이름 호텔 포함  모든 예약 조회 검색하기
+	List<Map<String,Object>> selectNameLocAllReserv(int guestNo);
+		
 	//예약번호를 매개 변수로 받아서 예약 정보 조회하는 메서드
 	 ReservationVO searchReservByNo(int reservNo) ;
 	
 	//=====관리자 기능
 	//회원번호를 매개변수로 모든 예약 조회 검색하기
-	 List<ReservationVO> selectAllReserv() ;
+	 List<Map<String,Object>> selectAllReserv() ;
 	
-	 List<ReservationVO> selectAllReserv(String startDate, String endDate) ;
+	 List<Map<String,Object>> selectAllReserv(String startDate, String endDate) ;
 	
-	 List<ReservationVO> selectCondition(String condition) ;
+	 List<Map<String,Object>> selectCondition(String condition) ;
 	
 	//예약번호를 매개번수로 받아서 방을 취소하는 메서드
 	 int deleteReserv(int reservNo) ;

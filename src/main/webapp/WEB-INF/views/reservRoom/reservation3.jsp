@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<jsp:include page="../inc/top.jsp"></jsp:include>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:import url="/inc/top"></c:import>
 <link rel="stylesheet" href="../css/reservCSS.css">
 <style>
 #step3{
@@ -29,30 +30,6 @@
 
 </style>
 
-<%
-	String userid = (String)session.getAttribute("userid"); //로그인 정보
-	
-	if(userid==null || userid.isEmpty()){ %>
-	<script type="text/javascript">
-		alert('먼저 로그인하세요');
-		location.href="<%=request.getContextPath()%>/login/login.jsp";
-	</script>
-	
-<%	return;
-	}
-	
-	request.setCharacterEncoding("utf-8");
-
-	//1. 파라미터 읽어오기
-	String locName = request.getParameter("locName");
-	String ci_date = request.getParameter("ci_date");
-	String co_date = request.getParameter("co_date");
-	String adult = request.getParameter("adult");
-	String kids = request.getParameter("kids");
-	
-	String roomType = request.getParameter("roomType");
-	String totalPrice = request.getParameter("totalPrice");
-%>
 <div style="margin-top: 100px; margin-bottom: 800px;">
 	<p style="font-size: 30px; text-align: center; font-weight: bold;">객실예약</p>
 
@@ -63,7 +40,7 @@
 			<td id="step3">옵션 선택</td>
 		</tr>
 	</table>
-	<form name="confirmRoom" method="post" action="reservation_ok.jsp" >
+	<form name="confirmRoom" method="POST" action="/reservRoom/reservation3" >
 		<table style="width: 900px" align="center" class="reserveOption" >
 			<tr>
 				<td colspan="4" align="center" 
@@ -77,36 +54,36 @@
 				<td colspan="3" id="line">
 					<table style="width: 100%">
 						<tr align="left">
-							<td>지점 : <b><%=locName%></b> 
-								<input type="hidden" name="locName" value="<%=locName%>">
+							<td>지점 : <b>${param.locName }</b> 
+								<input type="hidden" name="locName" value="${param.locName }">
 							</td>
-							<td>예약 객실 : <b><%=roomType%></b> 
-								<input type="hidden" name="roomType" value="<%=roomType%>">
+							<td>예약 객실 : <b>${param.roomType }</b> 
+								<input type="hidden" name="roomType" value="${param.roomType }">
 							</td>	
 						</tr>
 						<tr align="left">
-							<td>체크인날짜 : <b><%=ci_date%></b> 
-								<input type="hidden" name="ci_date" value="<%=ci_date%>">
+							<td>체크인날짜 : <b>${param.ci_date }</b> 
+								<input type="hidden" name="ci_date" value="${param.ci_date }">
 							</td>
-							<td>체크아웃 날짜 : <b><%=co_date%></b> 
-								<input type="hidden" name="co_date" value="<%=co_date%>">
+							<td>체크아웃 날짜 : <b>${param.co_date }</b> 
+								<input type="hidden" name="co_date" value="${param.co_date }">
 							</td>
 							
 						</tr>
 						<tr align="left">
-							<td>성인 투숙객 수 : <b><%=adult%></b>명 
-								<input type="hidden" name="adult" value="<%=adult%>">
+							<td>성인 투숙객 수 : <b>${param.adult }</b>명 
+								<input type="hidden" name="adult" value="${param.adult }">
 							</td>
-							<td>아동 투숙객 수 : <b><%=kids%></b>명 
-							    <input type="hidden" name="kids" value="<%=kids%>">
+							<td>아동 투숙객 수 : <b>${param.kids }</b>명 
+							    <input type="hidden" name="kids" value="${param.kids }">
 							</td>
 						</tr>
 						<tr><td colspan="2" style="height: 20px;"></td></tr>
 						<tr>
 							<td colspan="2" align="center">총 금액 :
 								<input type="text" name="totalPrice" style="width: 100px"
-								readonly="readonly" value="<%=totalPrice %>" >원 
-								<input type="hidden" name="totalPrice" value="<%=totalPrice %>">
+								readonly="readonly" value="${param.totalPrice }" >원 
+								<input type="hidden" name="totalPrice" value="${param.totalPrice }">
 							</td>
 						</tr>
 					</table>
@@ -126,22 +103,22 @@
 						</tr>
 						<tr align="center">
 							<td colspan="2">조식 인원 수 (1인당 40,000원 / 17,000원) :</td>
-							<td><input type="number" name="b_adult" id="option" value="0" min="0" max="<%=adult%>"></td>
-							<td><input type="number" name="b_kids" id="option" value="0" min="0" max="<%=kids%>"></td>
+							<td><input type="number" name="b_adult" id="option" value="0" min="0" max="${param.adult }"></td>
+							<td><input type="number" name="b_kids" id="option" value="0" min="0" max="${param.kids }"></td>
 						</tr>
 						<tr align="center">
 							<td colspan="2">수영장 인원 수 (1인당 45,000원 / 28,000원) : </td>
-							<td><input type="number" name="p_adult" id="option" value="0" min="0" max="<%=adult%>"></td>
-							<td><input type="number" name="p_kids" id="option" value="0" min="0" max="<%=kids%>"></td>
+							<td><input type="number" name="p_adult" id="option" value="0" min="0" max="${param.adult }"></td>
+							<td><input type="number" name="p_kids" id="option" value="0" min="0" max="${param.kids }"></td>
 						</tr>
 						<tr align="center">
 							<td colspan="2">사우나 인원 수 (1인당 35,000원) : </td>
-							<td><input type="number" name="s_adult" id="option" value="0" min="0" max="<%=adult%>"></td>
+							<td><input type="number" name="s_adult" id="option" value="0" min="0" max="${param.adult }"></td>
 							<td><b>아동 입장 불가</b></td>
 						</tr>
 						<tr align="center">
 							<td colspan="2">헬스장 인원 수 (1인당 20,000원) : </td>
-							<td><input type="number" name="g_adult" id="option" value="0" min="0" max="<%=adult%>"></td>
+							<td><input type="number" name="g_adult" id="option" value="0" min="0" max="${param.adult }"></td>
 							<td><b>아동 입장 불가</b></td>
 						</tr>
 					</table>
@@ -149,7 +126,7 @@
 			</tr>
 			<tr style="border-bottom:2px solid #e3e3e3;">
 				<td colspan="4" align="center" id="line"> 
-					<input type="submit" id="submitBtn" value="예약하기">
+					<input type="submit" id="submitBtn3" value="예약하기">
 				</td>
 			</tr>
 		</table>
