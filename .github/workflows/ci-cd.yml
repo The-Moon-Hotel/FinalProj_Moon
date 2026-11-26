@@ -12,8 +12,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: moon-build-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ${{ github.event_name == 'push' && github.ref_type == 'tag' && 'moon-synology-releases' || format('moon-build-{0}', github.ref) }}
+  queue: max
 
 jobs:
   build:
@@ -72,9 +72,9 @@ jobs:
     if: github.event_name == 'push' && github.ref_type == 'tag'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
-    concurrency:
-      group: moon-synology-release
-      queue: max
+    outputs:
+      image: ${{ steps.image.outputs.name }}
+      digest: ${{ steps.container.outputs.digest }}
     permissions:
       contents: read
       packages: write
@@ -100,6 +100,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
       - name: Publish the image
+        id: container
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
           context: build/distribution
@@ -114,3 +115,32 @@ jobs:
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.version=${{ github.ref_name }}
+
+  deploy:
+    name: Deploy to Synology
+    needs: publish
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: production
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Check out the deployment scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Deploy the published image over SSH
+        env:
+          NAS_HOST: ${{ secrets.NAS_HOST }}
+          NAS_SSH_USER: ${{ secrets.NAS_SSH_USER }}
+          NAS_SSH_KEY: ${{ secrets.NAS_SSH_KEY }}
+          NAS_KNOWN_HOSTS: ${{ secrets.NAS_KNOWN_HOSTS }}
+          NAS_APP_ENV: ${{ secrets.NAS_APP_ENV }}
+          NAS_SSH_PORT: ${{ vars.NAS_SSH_PORT || '22' }}
+          NAS_PROJECT_DIR: ${{ vars.NAS_PROJECT_DIR || '/volume1/docker/themoon' }}
+          RELEASE_IMAGE: ${{ needs.publish.outputs.image }}@${{ needs.publish.outputs.digest }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ github.token }}
+        run: bash deploy/synology/deploy-over-ssh.sh

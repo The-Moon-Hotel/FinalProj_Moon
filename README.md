@@ -31,20 +31,19 @@ git tag -a v1.0.0 -m "Release v1.0.0" origin/master
 git push origin refs/tags/v1.0.0
 ```
 
-NAS에서는 Container Manager의 Docker Compose v2로 다음 두 파일을 사용할 폴더에 복사합니다.
+이미지가 게시되면 GitHub Actions가 NAS에 SSH로 연결해 해당 이미지의 다이제스트로 Container Manager를 업데이트합니다. NAS 배포 계정은 Docker Compose v2를 실행하고 배포 폴더에 파일을 쓸 수 있어야 합니다.
 
-- [compose.yaml](deploy/synology/compose.yaml)
-- [update.sh](deploy/synology/update.sh)
+GitHub 저장소의 **Settings → Environments → production → Environment secrets**에 아래 값을 등록합니다. [GitHub 환경 시크릿 안내](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments)
 
-그 폴더에 배포 설정 파일 `.env`를 만듭니다. 이미지는 워크플로를 실행하는 저장소 이름을 소문자로 적습니다. 아래 값은 원본 저장소 기준입니다.
+| Secret | 값 |
+| --- | --- |
+| `NAS_HOST` | GitHub Actions 실행기가 접속할 수 있는 NAS SSH 호스트 |
+| `NAS_SSH_USER` | NAS의 배포 계정 |
+| `NAS_SSH_KEY` | 해당 계정에 등록한 배포용 SSH 개인 키 |
+| `NAS_KNOWN_HOSTS` | NAS 호스트 키를 검증한 `known_hosts` 항목. 기본 포트가 아니면 `[호스트]:포트`로 기록합니다. |
+| `NAS_APP_ENV` | 아래 형식의 앱 환경 파일 전체 |
 
-```dotenv
-THEMOON_IMAGE=ghcr.io/the-moon-hotel/finalproj_moon:latest
-THEMOON_BIND_ADDRESS=127.0.0.1
-THEMOON_PORT=18080
-```
-
-같은 폴더의 `app.env`에 NAS에서 접속할 수 있는 앱 전용 DB 계정을 설정합니다. 기존 Mac의 DB 계정이 접속 호스트로 제한되어 있다면 NAS 컨테이너의 접속도 DB 계정에 허용되어 있어야 합니다.
+운영 DB 계정은 NAS 컨테이너에서 접속할 수 있어야 합니다. DB 비밀번호와 같은 민감한 값은 `NAS_APP_ENV`에 입력합니다.
 
 ```dotenv
 SPRING_DATASOURCE_URL=jdbc:mariadb://2je7.synology.me:3306/themoon?sslMode=verify-full
@@ -52,12 +51,6 @@ SPRING_DATASOURCE_USERNAME=themoon_app
 SPRING_DATASOURCE_PASSWORD='여기에_NAS용_DB_비밀번호'
 ```
 
-GHCR 이미지가 비공개라면 NAS 작업을 실행할 계정에서 `docker login ghcr.io --username <GitHub 아이디>`로 로그인합니다. 비밀번호 입력에는 `read:packages` 권한의 GitHub classic PAT를 사용합니다. [GitHub Container Registry 인증 문서](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry)
+SSH 포트와 배포 폴더는 필요할 때 **Environment variables**의 `NAS_SSH_PORT`와 `NAS_PROJECT_DIR`로 지정합니다. 기본값은 `22`와 `/volume1/docker/themoon`입니다. 앱 포트는 NAS 배포 폴더의 `.env`에 `THEMOON_BIND_ADDRESS`와 `THEMOON_PORT`로 설정할 수 있습니다. DSM 리버스 프록시의 기본 대상은 `127.0.0.1:18080`입니다.
 
-DSM의 **제어판 → 작업 스케줄러 → 사용자 정의 스크립트**에 이 명령을 등록합니다. 경로는 두 파일을 복사한 NAS 폴더에 맞추고, 예를 들어 5분 간격으로 실행합니다. [Synology 작업 스케줄러 문서](https://kb.synology.com/en-uk/DSM/help/DSM/AdminCenter/system_taskscheduler)
-
-```sh
-/bin/sh /volume1/docker/themoon/update.sh
-```
-
-새 이미지가 공지사항 페이지를 통해 DB 연결 검사를 통과할 때까지 기다립니다. 검사에 실패하면 기존 컨테이너 이미지로 복구를 시도합니다. DSM 리버스 프록시를 사용한다면 대상은 기본값인 `127.0.0.1:18080`입니다.
+새 컨테이너는 공지사항 페이지에서 DB 연결 검사를 통과해야 합니다. 검사에 실패하면 직전 이미지와 설정으로 복구를 시도합니다.
