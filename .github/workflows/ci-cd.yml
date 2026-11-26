@@ -2,9 +2,10 @@ name: Build and publish Moon Hotel
 
 on:
   pull_request:
-    branches: [main]
+    branches: [dev, master]
   push:
     branches: ['**']
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
@@ -28,6 +29,18 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+          fetch-depth: ${{ github.ref_type == 'tag' && '0' || '1' }}
+      - name: Validate the release tag
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo 'Release tags must have the form vMAJOR.MINOR.PATCH.' >&2
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor HEAD refs/remotes/origin/master; then
+            echo 'The release tag must point to a commit on master.' >&2
+            exit 1
+          fi
       - name: Set up Java 17
         uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
         with:
@@ -56,47 +69,37 @@ jobs:
   publish:
     name: Publish Synology image
     needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    concurrency:
+      group: moon-synology-release
+      queue: max
     permissions:
       contents: read
       packages: write
     steps:
-      - name: Resolve the image for the current main commit
+      - name: Resolve the image name
         id: image
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
-          if [[ "$GITHUB_SHA" == "$main_sha" ]]; then
-            echo "name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
-          else
-            echo 'A newer commit is on main. Skipping image publication.'
-          fi
+        run: echo "name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
       - name: Check out the deployment Dockerfile
-        if: steps.image.outputs.name != ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
       - name: Download the tested WAR
-        if: steps.image.outputs.name != ''
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: themoon-war
           path: build/distribution
       - name: Set up Docker Buildx
-        if: steps.image.outputs.name != ''
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
       - name: Log in to GitHub Container Registry
-        if: steps.image.outputs.name != ''
         uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
       - name: Publish the image
-        if: steps.image.outputs.name != ''
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
           context: build/distribution
@@ -105,7 +108,9 @@ jobs:
           push: true
           tags: |
             ${{ steps.image.outputs.name }}:latest
+            ${{ steps.image.outputs.name }}:${{ github.ref_name }}
             ${{ steps.image.outputs.name }}:sha-${{ github.sha }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ github.ref_name }}

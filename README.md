@@ -21,7 +21,15 @@ bash gradlew bootRun
 
 ## GitHub Actions와 Synology 배포
 
-[CI/CD 워크플로](.github/workflows/ci-cd.yml)는 브랜치 푸시와 `main` 대상 PR에서 Java 17로 테스트를 실행하고 `themoon-war` 산출물을 남깁니다. 테스트를 통과한 현재 `main`의 컨테이너 이미지는 GitHub Container Registry에 `latest` 및 `sha-<커밋 SHA>` 태그로 게시됩니다. 이미지는 NAS의 amd64와 arm64를 지원합니다. [GitHub의 이미지 게시 문서](https://docs.github.com/en/actions/tutorials/publish-packages/publish-docker-images)
+`dev`는 개발 브랜치이며, 배포할 변경은 `master`에 병합합니다. [CI/CD 워크플로](.github/workflows/ci-cd.yml)는 브랜치 푸시와 `dev`·`master` 대상 PR에서 Java 17로 테스트를 실행하고 `themoon-war` 산출물을 남깁니다.
+
+NAS용 이미지는 `master`에 포함된 커밋에 `v1.0.0` 형식의 버전 태그를 푸시하고 테스트가 통과했을 때 게시됩니다. GitHub Container Registry에 버전, `latest`, `sha-<커밋 SHA>`를 붙이며 amd64와 arm64를 지원합니다. [GitHub의 이미지 게시 문서](https://docs.github.com/en/actions/tutorials/publish-packages/publish-docker-images)
+
+```bash
+git fetch origin master
+git tag -a v1.0.0 -m "Release v1.0.0" origin/master
+git push origin refs/tags/v1.0.0
+```
 
 NAS에서는 Container Manager의 Docker Compose v2로 다음 두 파일을 사용할 폴더에 복사합니다.
 
