@@ -72,7 +72,8 @@ mv -f "$staging_dir/compose.yaml" "$staging_dir/update.sh" "$project_dir/"
 THEMOON_IMAGE="$release_image" THEMOON_APP_ENV_FILE="$staging_dir/app.env" /bin/sh "$project_dir/update.sh"
 REMOTE_SCRIPT
 
-scp -p "${ssh_options[@]}" "$base_dir/compose.yaml" "$base_dir/update.sh" \
-    "$workspace/app.env" "$workspace/activate.sh" "$remote:$staging_dir/"
+tar -c -f - -C "$base_dir" compose.yaml update.sh -C "$workspace" app.env activate.sh |
+    ssh "${ssh_options[@]}" "$remote" \
+        "umask 077; tar -x -f - -C '$staging_dir' && chmod 600 '$staging_dir/app.env'"
 printf '%s\n' "$GHCR_TOKEN" | ssh "${ssh_options[@]}" "$remote" \
     "/bin/sh '$staging_dir/activate.sh' '$NAS_PROJECT_DIR' '$RELEASE_IMAGE' '$GHCR_USER'"
