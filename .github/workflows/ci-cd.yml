@@ -1,0 +1,111 @@
+name: Build and publish Moon Hotel
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: moon-build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Test and build WAR
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://127.0.0.1:3306/themoon_ci?connectTimeout=1000
+      SPRING_DATASOURCE_USERNAME: ci
+      SPRING_DATASOURCE_PASSWORD: ''
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up Java 17
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Gradle and validate the wrapper
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6
+      - name: Run tests and package the Spring Boot WAR
+        run: |
+          bash ./gradlew --no-daemon test bootWar
+          mapfile -t wars < <(find build/libs -maxdepth 1 -name '*.war' ! -name '*-plain.war' -type f)
+          if [[ ${#wars[@]} -ne 1 ]]; then
+            echo 'Expected exactly one executable WAR.' >&2
+            exit 1
+          fi
+          install -D "${wars[0]}" build/distribution/themoon.war
+      - name: Upload deployable WAR
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: themoon-war
+          path: build/distribution/themoon.war
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+  publish:
+    name: Publish Synology image
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Resolve the image for the current main commit
+        id: image
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          if [[ "$GITHUB_SHA" == "$main_sha" ]]; then
+            echo "name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          else
+            echo 'A newer commit is on main. Skipping image publication.'
+          fi
+      - name: Check out the deployment Dockerfile
+        if: steps.image.outputs.name != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Download the tested WAR
+        if: steps.image.outputs.name != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: themoon-war
+          path: build/distribution
+      - name: Set up Docker Buildx
+        if: steps.image.outputs.name != ''
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+      - name: Log in to GitHub Container Registry
+        if: steps.image.outputs.name != ''
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Publish the image
+        if: steps.image.outputs.name != ''
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: build/distribution
+          file: deploy/synology/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ steps.image.outputs.name }}:latest
+            ${{ steps.image.outputs.name }}:sha-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}

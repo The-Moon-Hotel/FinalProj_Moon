@@ -18,12 +18,6 @@ public class ReservationServiceImp implements ReservationService{
 		return this.reservDao.insertReservation(reservVo);
 	}
 	
-	//회원 번호를 매개 변수로 받아서 조회한 회원의 가장 최근 예약 번호를 찾는 메서드
-	@Override
-	public int searchReservNo(int guestNo)  {
-		return this.reservDao.searchReservNo(guestNo);
-	}
-	
 	//회원 번호를 매개 변수로 받아서 조회한 회원의 가장 최근 예약 정보 조회하는 메서드
 	@Override
 	public ReservationVO searchReserv(int guestNo)  {

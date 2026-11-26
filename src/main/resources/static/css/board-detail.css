@@ -1,0 +1,166 @@
+body:has(.board-detail) {
+	background: #f5f7fa;
+}
+
+body:has(.board-detail) .navWhite {
+	position: sticky;
+	top: 0;
+	z-index: 1030;
+	height: auto !important;
+	min-height: 70px;
+	border-bottom: 1px solid #ffffff29;
+	background: #111f34 !important;
+}
+
+body:has(.board-detail) #navBlack {
+	display: none;
+}
+
+body:has(.board-detail) .navWhite .navbar-toggler {
+	border-color: #ffffff57;
+}
+
+body:has(.board-detail) .navWhite .navbar-toggler-icon {
+	filter: invert(1);
+}
+
+body:has(.board-detail) .navWhite .btn-outline-primary {
+	border-color: #c5a77b;
+	color: #f1d39e;
+}
+
+body:has(.board-detail) .navWhite .btn-outline-primary:hover {
+	background: #f1d39e;
+	color: #152338;
+}
+
+.board-detail {
+	box-sizing: border-box;
+	display: grid;
+	width: min(980px, calc(100% - 40px));
+	min-height: calc(100vh - 70px);
+	align-content: start;
+	gap: 16px;
+	margin-inline: auto;
+	padding: clamp(22px, 5vw, 50px) 0 48px;
+	color: #152338;
+}
+
+.board-heading,
+.board-panel-header {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 8px 16px;
+}
+
+.board-heading {
+	margin-bottom: 4px;
+}
+
+.board-heading h1,
+.board-panel-header h2 {
+	margin: 0;
+	font-weight: 750;
+	letter-spacing: -.035em;
+	overflow-wrap: anywhere;
+}
+
+.board-heading h1 {
+	font-size: clamp(1.55rem, 5vw, 2.2rem);
+}
+
+.board-panel-header h2 {
+	font-size: 1.15rem;
+}
+
+.board-panel-header p,
+.inquiry-reply-meta span,
+.inquiry-empty {
+	margin: 0;
+	color: #52637a;
+	font-size: .88rem;
+}
+
+.board-panel {
+	min-width: 0;
+	padding: clamp(16px, 3vw, 24px);
+	border: 1px solid #dde4ed;
+	border-radius: 13px;
+	background: #fff;
+}
+
+.board-message {
+	margin: 15px 0 0;
+	color: #2d3e55;
+	line-height: 1.65;
+	overflow-wrap: anywhere;
+}
+
+p.board-message {
+	white-space: pre-wrap;
+}
+
+.review-content {
+	overflow-x: auto;
+}
+
+.review-content > :first-child {
+	margin-top: 0;
+}
+
+.review-content > :last-child {
+	margin-bottom: 0;
+}
+
+.review-content img {
+	max-width: 100%;
+	height: auto;
+}
+
+.board-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+.inquiry-empty,
+.board-panel textarea {
+	margin-top: 14px;
+}
+
+.board-panel textarea {
+	resize: vertical;
+}
+
+.inquiry-replies {
+	margin: 16px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.inquiry-replies li + li {
+	margin-top: 15px;
+	padding-top: 15px;
+	border-top: 1px solid #e5ebf3;
+}
+
+.inquiry-reply-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 6px 12px;
+	overflow-wrap: anywhere;
+}
+
+.inquiry-reply-meta + .board-message {
+	margin-top: 6px;
+}
+
+@media (max-width: 767px) {
+	body:has(.board-detail) .navWhite .navbar-collapse {
+		padding: 12px 0 8px;
+	}
+}

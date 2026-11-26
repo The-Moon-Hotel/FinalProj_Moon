@@ -34,9 +34,9 @@
   	});
   	
   	$(function(){
-  		var resevUserid="${t_userid}";
+		var loggedIn = ${t_login};
   		$('#bookBtn1').click(function(){
-  			if(resevUserid==""){
+			if(!loggedIn){
   				alert("예약을 하려면 로그인이 필요합니다.");
   				event.preventDefault();
   			}else{  				
@@ -44,7 +44,7 @@
   			}
   		});
   		$('#bookBtn2').click(function(){
-  			if(resevUserid==""){
+			if(!loggedIn){
   				alert("예약을 하려면 로그인이 필요합니다.");
   				event.preventDefault();
   			}else{  				
@@ -61,10 +61,10 @@
 	
   <div class="container-fluid" >
         <a class="navbar-brand navColor" href="/" >THE MOON HOTEL</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbarContent" aria-controls="mainNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+    <div class="collapse navbar-collapse " id="mainNavbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       
         <li class="nav-item dropdown">
@@ -104,7 +104,7 @@
       </ul>
       <c:if test="${t_login==true }">
       	<c:choose >
-      		<c:when test="${GuestOrAdmin==GUEST_ACCOUNT }">
+		<c:when test="${not t_admin}">
       			<!-- 로그인시 보이게 설정 -->
 		        <li class="nav-item dropdown nav-link me-3 mb-2 mb-lg-0 navColor" >
 		          <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -129,6 +129,8 @@
 		          	<li><a class="dropdown-item" href="/admin/guestList">회원관리</a></li>
 		            <li><a class="dropdown-item" href="/admin/reservList">예약정보조회</a></li>
 		            <li><a class="dropdown-item" href="/admin/Sales">매출조회</a></li>
+		            <li><a class="dropdown-item" href="/noticeBoard/noticeBoardList">공지 관리</a></li>
+		            <li><a class="dropdown-item" href="/askBoard/askBoardList">문의 답변</a></li>
 		          </ul>
 		        </li>
 		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="/login/logout"  >로그아웃</a>
@@ -152,10 +154,10 @@
   <div class="container-fluid" >
         <a class="navbar-brand navColor" href="/" >THE MOON HOTEL</a>
     
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#fixedNavbarContent" aria-controls="fixedNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+    <div class="collapse navbar-collapse " id="fixedNavbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
          <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -196,7 +198,7 @@
       </ul>
       <c:if test="${t_login==true }">
       	<c:choose >
-      		<c:when test="${GuestOrAdmin==GUEST_ACCOUNT }">
+		<c:when test="${not t_admin}">
       			<!-- 로그인시 보이게 설정 -->
 		        <li class="nav-item dropdown nav-link me-3 mb-2 mb-lg-0 navColor"  >
 		          <a class="nav-link dropdown-toggle navColor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -221,6 +223,8 @@
 		          	<li><a class="dropdown-item" href="/admin/guestList">회원관리</a></li>
 		            <li><a class="dropdown-item" href="/admin/reservList">예약정보조회</a></li>
 		            <li><a class="dropdown-item" href="/admin/Sales">매출조회</a></li>
+		            <li><a class="dropdown-item" href="/noticeBoard/noticeBoardList">공지 관리</a></li>
+		            <li><a class="dropdown-item" href="/askBoard/askBoardList">문의 답변</a></li>
 		          </ul>
 		        </li>
 		      	<a class="nav-item nav-link me-3 mb-2 mb-lg-0 navColor"   href="/login/logout"  >로그아웃</a>

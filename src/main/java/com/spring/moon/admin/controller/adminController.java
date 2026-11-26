@@ -1,6 +1,5 @@
 package com.spring.moon.admin.controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -11,12 +10,14 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.moon.askBoard.model.AskBoardVO;
+import com.spring.moon.common.AccountRequired;
 import com.spring.moon.common.PagingVO;
 import com.spring.moon.facility.model.FacilityService;
 import com.spring.moon.guest.model.GuestService;
@@ -25,10 +26,9 @@ import com.spring.moon.reservRoom.model.ReservationService;
 import com.spring.moon.reservRoom.model.ReservationVO;
 import com.spring.moon.room.model.RoomService;
 import com.spring.moon.room.model.RoomVO;
-import com.spring.moon.sales.model.SalesService;
-import com.spring.moon.sales.model.SalesVO2;
 
 @Controller
+@AccountRequired(admin = true)
 public class adminController {
 	
 	@Autowired
@@ -39,8 +39,6 @@ public class adminController {
 	RoomService roomService;
 	@Autowired
 	FacilityService facService;
-	@Autowired
-	SalesService salesService;
 	//////////////////////////////////////////////////////////
 	//////////////////////// G E T ///////////////////////////
 	//////////////////////////////////////////////////////////
@@ -64,7 +62,7 @@ public class adminController {
 		return mav;
 	}
 	 */
-	@GetMapping("/admin/guestList") 
+	@RequestMapping("/admin/guestList")
 	public ModelAndView guestList(HttpServletRequest request,@RequestParam Map<String, Object> map,
 			@RequestParam(value = "currentPage", defaultValue = "1") int currentPage) { 
 		ModelAndView mav= new ModelAndView();
@@ -173,7 +171,8 @@ public class adminController {
 		}
 		return mav;
 	}
-	@GetMapping("/admin/reservDelete") 
+	@Transactional
+	@PostMapping("/admin/reservDelete")
 	public ModelAndView reservDelete(HttpServletRequest request,@RequestParam int reservNo) { 
 		ModelAndView mav= new ModelAndView();
 		HttpSession session = request.getSession();
@@ -185,10 +184,8 @@ public class adminController {
 			mav.addObject("url", url);
 			mav.setViewName("common/message");
 		} else {
-			//객실예약 취소
+			facService.deleteFacility(reservNo);
 			int reservDel = reservService.deleteReserv(reservNo);
-			//부대시설 예약 취소
-			int facDel = facService.deleteFacility(reservNo);
 			
 			String msg="예약취소 실패하였습니다", url="javascript:history.back()";
 			if(reservDel > 0){
@@ -303,72 +300,7 @@ public class adminController {
 		}
 		return mav;
 	}
-	@RequestMapping(value="/admin/Sales") 
-	public ModelAndView Sales(HttpServletRequest request) throws ParseException { 
-		ModelAndView mav= new ModelAndView();
-		HttpSession session = request.getSession();
-		String userid = (String) session.getAttribute("userid");
 
-		if (userid == null) {
-			String msg = "로그아웃 되었습니다.", url = "/login/login";
-			mav.addObject("msg", msg);
-			mav.addObject("url", url);
-			mav.setViewName("common/message");
-		} else {
-			String branchType=request.getParameter("SearchBranchType");
-			String salesType=request.getParameter("SearchSalesType");
-			String date1=request.getParameter("searchDate1");
-			String date2=request.getParameter("searchDate2");
-			SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
-
-			List<SalesVO2> list=null;
-			List<SalesVO2> list1=null;
-			int st=0;
-
-			int sum=0, sum1=0;
-
-			//branchType는  
-			if(branchType!=null&& !branchType.isEmpty()&&salesType!=null&& !salesType.isEmpty()){
-				st=Integer.parseInt(salesType);
-				Date d1=sdf.parse(date1);
-				Date d2=sdf.parse(date2);
-				int compareDate=d1.compareTo(d2);
-				Date change=null;
-				if(compareDate>0){
-					change=d1;
-					d1=d2;
-					d2=change;
-				} 
-				String date01=sdf.format(d1);
-				String date02=sdf.format(d2);
-				if(st==1||st==3){//타입별
-						list = this.salesService.salesByLocNo(date01, date02, branchType);
-				}
-				if(st==2||st==3){//부대시설별
-						list1 = this.salesService.salesByFac(date01, date02, branchType);
-				}
-				if(st != 1 && st != 2 && st != 3){
-					branchType="";
-					salesType="";
-					date1="";
-					date2="";
-				}
-			}
-			mav.addObject("sum", sum);
-			mav.addObject("sum1", sum1);
-			mav.addObject("st", st);
-			mav.addObject("list", list);
-			mav.addObject("list1", list1);
-			mav.addObject("branchType", branchType);
-			mav.addObject("salesType", salesType);
-			mav.addObject("date1", date1);
-			mav.addObject("date2", date2);
-
-			mav.setViewName("admin/Sales");
-		}
-		return mav;
-	}
-	
 	//////////////////////////////////////////////////////////
 	//////////////////////// P O S T /////////////////////////
 	//////////////////////////////////////////////////////////

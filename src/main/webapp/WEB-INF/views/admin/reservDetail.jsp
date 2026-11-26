@@ -43,11 +43,11 @@
 		</ul>
 		<ul class="list-group" style="float:left; width: 65%">
 		  <li class="list-group-item">${reservNo }</li>
-		  <li class="list-group-item">${guestVo.name }</li>
+		  <li class="list-group-item"><c:out value="${guestVo.name}" /></li>
 		  <li class="list-group-item">${reservVo.guestNo }</li>
-		  <li class="list-group-item">${guestVo.userid }</li>
-		  <li class="list-group-item">${guestVo.email }</li>
-		  <li class="list-group-item">${guestVo.tel }</li>
+		  <li class="list-group-item"><c:out value="${guestVo.userid}" /></li>
+		  <li class="list-group-item"><c:out value="${guestVo.email}" /></li>
+		  <li class="list-group-item"><c:out value="${guestVo.tel}" /></li>
 		  <li class="list-group-item">${reservVo.ci_date } - ${reservVo.co_date }</li>
 		  <li class="list-group-item">${roomVo.locName }</li>
 		  <li class="list-group-item">${roomVo.roomType }</li>
@@ -58,8 +58,10 @@
 	<div align="center">
 		<a class="btn btn-secondary" role="button" id="reservList"
 			 href="/admin/reservList">예약 목록</a>
-		<a class="btn btn-secondary" role="button" id="reservDelete"
-			 href="/admin/reservDelete?reservNo=${reservNo}">예약 취소</a>
+		<form method="post" action="<c:url value='/admin/reservDelete' />" class="d-inline" onsubmit="return confirm('이 예약을 취소하시겠습니까?')">
+			<input type="hidden" name="reservNo" value="${reservNo}">
+			<button class="btn btn-secondary" type="submit">예약 취소</button>
+		</form>
 	</div>
 </div>
 <jsp:include page="../inc/footer.jsp"></jsp:include>

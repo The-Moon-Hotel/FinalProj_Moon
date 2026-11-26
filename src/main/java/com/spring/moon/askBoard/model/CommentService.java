@@ -7,6 +7,6 @@ public interface CommentService {
 	
 	int insertcomment(CommentVO vo);
 	
-	int deleteComment(int no);
+	int deleteComment(int no, int askNo);
 	int deleteAskNoComment(int askNo);
 }

@@ -1,218 +1,212 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<c:import url="/inc/top"></c:import>
-<link rel="stylesheet" type="text/css" href="/css/sales.css">
-<script type="text/javascript" src="/js/jquery-3.6.1.min.js"></script>
-<script type="text/javascript">
-	$(function(){
-		$('form[name=SalseCk]').submit(function(){
-			var branchChk=$('#branchType option:selected').val();
-			var salesChk=$('#salesType option:selected').val();
-			if(branchChk=='0'){
-				alert("조회할 지점을 선택하세요");
-				$(this).focus();s
-				event.preventDefault();
-			}else if(salesChk=='0'){
-				alert("조회목록을 선택하세요");
-				$(this).focus();
-				event.preventDefault();
-			}else if($('#date1').val().length<1){
-				alert("조회할 기간을 선택하세요");
-				$(this).focus();
-				event.preventDefault();
-			}else if($('#date2').val().length<1){
-				alert("조회할 기간을 선택하세요");
-				$(this).focus();
-				event.preventDefault();
-			}
-		});
-	});
-</script>
-<section class="salesBanner">
-	<article>
-		<div>
-		  <img src="../images/resevBanner.png" class="" alt="...">
+<c:import url="/inc/top" />
+<link rel="stylesheet" href="<c:url value='/css/admin-sales.css' />">
+<c:url var="salesUrl" value="/admin/Sales" />
+
+<main class="sales-page">
+	<header class="sales-hero">
+		<div class="sales-shell sales-hero-inner">
+			<div>
+				<p class="sales-hero-label">호텔 운영</p>
+				<h1>매출 현황</h1>
+				<p class="sales-hero-copy">예약의 체크인 날짜를 기준으로 집계합니다.</p>
+			</div>
+			<c:if test="${empty dateError}">
+				<div class="sales-scope">
+					<span><c:out value="${branchLabel}" /></span>
+					<p><time datetime="${startDate}">${startDate}</time> <span aria-hidden="true">–</span> <time datetime="${endDate}">${endDate}</time></p>
+				</div>
+			</c:if>
 		</div>
-	</article>
-</section>
-		<div class="container text-center salesTitle">
-			<h1>매출조회</h1>
-		</div>
-<section class="content">
-		<div>
-			<form name="SalseCk" method="post" action="/admin/Sales"> 
-				<fieldset>
-					<div class="ck">
-						<div>
-							<p class="pSize" style="display: inline-block;">지점 : </p>
-							<select class="form-select form-select-md mb-3 selectSize" id="branchType" name="SearchBranchType" style="display: inline-block;" >
-							  	<option value="0">지점선택</option>
-								<option value="Full Moon"
-									<c:if test="${map.branchType=='Full Moon' }">
-							        	selected="selected"
-								    </c:if>
-								>Full Moon</option>
-								<option value="Half Moon"
-									<c:if test="${map.branchType=='Half Moon' }">
-							        	selected="selected"
-								    </c:if>						
-								>Half Moon</option>
-								<option value="Crescent Moon"
-									<c:if test="${map.branchType=='Crescent Moon' }">
-							        	selected="selected"
-								    </c:if>							
-								>Crescent Moon</option>
-								<option value="all"
-									<c:if test="${map.branchType=='all' }">
-							        	selected="selected"
-								    </c:if>						
-								>전체지점</option>
-							</select>
-							<p class="pSize" style="display: inline-block;">조회목록 : </p>
-							<select class="form-select form-select-md mb-3 selectSize" id="salesType" name="SearchSalesType" style="display: inline-block;" >
-							  	<option value="0">조회 목록</option>
-								<option value="1"
-									<c:if test="${map.salesType=='1' }">
-							        	selected="selected"
-								    </c:if>					
-								>타입별 매출</option>
-								<option value="2"
-									<c:if test="${map.salesType=='2' }">
-							        	selected="selected"
-								    </c:if>
-								>부대시설별 매출</option>
-								<option value="3"
-									<c:if test="${map.salesType=='3' }">
-							        	selected="selected"
-								    </c:if>	
-								>모든 항목 매출</option>
-							</select>
-						</div>
-							<p class="pSize" style="display: inline-block;">조회기간 : </p>
-						<div class="input-group mb-3 dateSize" style="display: inline-block;width: 311px;">
-						  	<input type="date" class="form-control " style="width: 100%" name="searchDate1" id="date1" value="${date1}">
-						</div>
-							<p class="pSize" style="display: inline-block; width: 30px">&nbsp;~&nbsp;</p>
-						<div class="input-group mb-3 dateSize" style="display: inline-block; width: 311px;">
-						  	<input type="date" class="form-control" style="width: 100%" name="searchDate2" id="date2" value="${date2}">
-						</div>
-						<div style="text-align:center ;display: block;">
-							<button type="submit" class="btn btn-dark" style="width: 100px">조회</button>
+	</header>
+
+	<div class="sales-shell sales-content">
+		<section class="sales-panel sales-filter" aria-labelledby="sales-filters-heading">
+			<form id="sales-filter" action="${salesUrl}" method="get">
+				<div class="sales-filter-heading">
+					<h2 id="sales-filters-heading">조회 조건</h2>
+					<div class="sales-presets" id="sales-presets" role="group" aria-label="자주 쓰는 기간" hidden>
+						<c:forEach var="preset" items="${presets}">
+							<button type="button" data-start="${preset.start}" data-end="${preset.end}"
+									aria-pressed="${startDate eq preset.start and endDate eq preset.end}">${preset.label}</button>
+						</c:forEach>
+					</div>
+				</div>
+				<div class="sales-filter-fields">
+					<div class="sales-field">
+						<label for="sales-branch">지점</label>
+						<select id="sales-branch" name="SearchBranchType">
+							<option value="all" ${branch eq 'all' ? 'selected' : ''}>전체 지점</option>
+							<c:forEach var="name" items="${branches}">
+								<option value="${name}" ${branch eq name ? 'selected' : ''}>${name}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="sales-field">
+						<label for="sales-category">매출 구분</label>
+						<select id="sales-category" name="SearchSalesType">
+							<option value="3" ${category eq '3' ? 'selected' : ''}>객실 · 부대시설</option>
+							<option value="1" ${category eq '1' ? 'selected' : ''}>객실</option>
+							<option value="2" ${category eq '2' ? 'selected' : ''}>부대시설</option>
+						</select>
+					</div>
+					<div class="sales-field">
+						<label for="sales-start">시작일</label>
+						<input id="sales-start" name="searchDate1" type="date" value="<c:out value='${startDate}' />" required>
+					</div>
+					<div class="sales-field">
+						<label for="sales-end">종료일</label>
+						<input id="sales-end" name="searchDate2" type="date" value="<c:out value='${endDate}' />" required>
+					</div>
+					<button class="sales-submit" type="submit">매출 조회</button>
+				</div>
+				<c:if test="${not empty dateError}">
+					<p class="sales-date-error" role="alert">${dateError}</p>
+				</c:if>
+			</form>
+		</section>
+
+		<c:if test="${empty dateError}">
+			<section class="sales-summary" aria-label="매출 요약">
+				<c:if test="${showRooms and showFacilities}">
+					<div class="sales-panel sales-metric sales-metric-total">
+						<h2>총 매출</h2>
+						<p class="sales-metric-amount"><fmt:formatNumber value="${totalRevenue}" /><span>원</span></p>
+						<p class="sales-metric-detail">객실과 부대시설 합계</p>
+					</div>
+				</c:if>
+				<c:if test="${showRooms}">
+					<div class="sales-panel sales-metric">
+						<h2><span class="sales-key sales-key-room" aria-hidden="true"></span>객실 매출</h2>
+						<p class="sales-metric-amount"><fmt:formatNumber value="${roomRevenue}" /><span>원</span></p>
+						<a class="sales-metric-detail" href="#sales-rooms">예약 <fmt:formatNumber value="${reservationCount}" />건 <span aria-hidden="true">↓</span></a>
+					</div>
+				</c:if>
+				<c:if test="${showFacilities}">
+					<div class="sales-panel sales-metric">
+						<h2><span class="sales-key sales-key-facility" aria-hidden="true"></span>부대시설 매출</h2>
+						<p class="sales-metric-amount"><fmt:formatNumber value="${facilityRevenue}" /><span>원</span></p>
+						<a class="sales-metric-detail" href="#sales-facilities">이용 인원 <fmt:formatNumber value="${visitorCount}" />명 <span aria-hidden="true">↓</span></a>
+					</div>
+				</c:if>
+			</section>
+
+			<div class="sales-charts ${showRooms and showFacilities ? 'sales-charts-split' : ''}">
+				<section class="sales-panel sales-chart" aria-labelledby="branch-chart-heading">
+					<div class="sales-chart-heading">
+						<h2 id="branch-chart-heading">지점별 매출</h2>
+						<div class="sales-legend">
+							<c:if test="${showRooms}"><span><i class="sales-key sales-key-room" aria-hidden="true"></i>객실</span></c:if>
+							<c:if test="${showFacilities}"><span><i class="sales-key sales-key-facility" aria-hidden="true"></i>부대시설</span></c:if>
 						</div>
 					</div>
-				</fieldset>
-				<div class="tableSize">
-				<c:if test="${st==1 or st==3 }">
-					<table class="table">
-						<thead>
-							<tr>							
-								<th scope="col">날짜</th>
-								<th scope="col">지점</th>
-								<th scope="col">타입</th>
-								<th scope="col">단가</th>
-								<th scope="col">수량</th>
-								<th scope="col">합계</th>								
-							</tr>
-							<c:forEach var="vo" items="${list }">
-								<c:set var="sum" value="${sum+ vo.room_total_Price }" />
-								<tbody>
-									<tr>
-										<td>${vo.ci_date }</td>
-										<td>${vo.locName }</td>	
-										<td>${vo.roomType }</td>							
-										<td>${vo.roomPrice }</td>								
-										<td>${vo.quantity }</td>								
-										<td>${vo.room_total_Price } 원</td>								
-									</tr>
-								</tbody>
-							</c:forEach>
-						<tfoot>
-							<th colspan="5">총 매출</th>
-							<th>
-								${sum } 원					
-							</th>
-						</tfoot>
-					</table>
-					</c:if>
-					
-					<c:if test="${st==2 }">
-						<table class="table">
-						<thead>
-							<tr>							
-								<th scope="col">날짜</th>
-								<th scope="col">지점</th>
-								<th scope="col">시설명</th>
-								<th scope="col">성인수</th>
-								<th scope="col">아동수</th>
-								<th scope="col">성인가격</th>								
-								<th scope="col">아동가격</th>															
-							</tr>
-							<c:forEach var="vo" items="${list1 }">
-								<c:set var="sum1" value="${sum1+ vo.fac_Adult_Price }" />
-								<c:set var="sum1" value="${sum1+ vo.fac_kids_Price }" />
-								<tbody>
-									<tr>
-										<td>${vo.ci_date }</td>
-										<td>${vo.locName }</td>	
-										<td>${vo.facname }</td>							
-										<td>${vo.fac_adultNo }</td>								
-										<td>${vo.fac_kidsNo }</td>								
-										<td>${vo.fac_Adult_Price }</td>								
-										<td>${vo.fac_kids_Price }</td>																
-									</tr>
-								</tbody>
-							</c:forEach>
-						<tfoot>
-							<th colspan="6">총 매출</th>
-							<th>${sum1 } 원	</th>
-						</tfoot>
-					</table>
-					</c:if>	
-					<c:if test="${st==3 }">
-						<div style="height:50px"></div>	
-						<table class="table">
-						<thead>
-							<tr>							
-								<th scope="col">날짜</th>
-								<th scope="col">지점</th>
-								<th scope="col">시설명</th>
-								<th scope="col">성인수</th>
-								<th scope="col">아동수</th>
-								<th scope="col">성인가격</th>								
-								<th scope="col">아동가격</th>															
-							</tr>
-							<c:forEach var="vo" items="${list1 }">
-								<c:set var="sum1" value="${sum1+ vo.fac_Adult_Price }" />
-								<c:set var="sum1" value="${sum1+ vo.fac_kids_Price }" />
-								<tbody>
-									<tr>
-										<td>${vo.ci_date }</td>
-										<td>${vo.locName }</td>	
-										<td>${vo.facname }</td>							
-										<td>${vo.fac_adultNo }</td>								
-										<td>${vo.fac_kidsNo }</td>								
-										<td>${vo.fac_Adult_Price }</td>								
-										<td>${vo.fac_kids_Price }</td>																	
-									</tr>
-							</c:forEach>
-						 	
-							<th colspan="5">
-							<th>총 매출</th>
-							<th>${sum1 } 원</th>
-						</tbody>
-						<tfoot>
-							<th colspan="5">
-							<th>
-								객실&부대시설 매출 합계</th>
-							<th>${sum+sum1 } 원</th>
-						</tfoot>
-					</table>
-					</c:if>	
-				</div>
-			</form>
-		</div>
-</section>
-<jsp:include page="../inc/footer.jsp"></jsp:include>
+					<ul class="sales-branch-list">
+						<c:forEach var="row" items="${branchChart}">
+							<li>
+								<span class="sales-branch-name"><c:out value="${row.label}" /></span>
+								<span class="sales-branch-track" aria-hidden="true">
+									<span class="sales-branch-mark" style="--branch-width: ${row.width}%; --branch-room-share: ${row.roomShare}%;"></span>
+								</span>
+								<strong class="sales-branch-amount"><fmt:formatNumber value="${row.total}" /><small>원</small></strong>
+							</li>
+						</c:forEach>
+					</ul>
+				</section>
+
+				<c:if test="${showRooms and showFacilities}">
+					<section class="sales-panel sales-chart" aria-labelledby="sales-composition-heading">
+						<div class="sales-chart-heading"><h2 id="sales-composition-heading">매출 구성</h2></div>
+						<div class="sales-composition">
+							<div class="sales-donut ${totalRevenue le 0 ? 'sales-donut-empty' : ''}" style="--room-share: ${roomShare}%;" aria-hidden="true"></div>
+							<dl>
+								<div><dt><i class="sales-key sales-key-room" aria-hidden="true"></i>객실</dt><dd><c:choose><c:when test="${totalRevenue gt 0}">${roomShare}%</c:when><c:otherwise>—</c:otherwise></c:choose></dd></div>
+								<div><dt><i class="sales-key sales-key-facility" aria-hidden="true"></i>부대시설</dt><dd><c:choose><c:when test="${totalRevenue gt 0}">${facilityShare}%</c:when><c:otherwise>—</c:otherwise></c:choose></dd></div>
+							</dl>
+						</div>
+					</section>
+				</c:if>
+			</div>
+
+			<c:if test="${showRooms}">
+				<section class="sales-panel sales-breakdown" id="sales-rooms" aria-labelledby="sales-rooms-heading">
+					<header class="sales-breakdown-heading">
+						<h2 id="sales-rooms-heading"><i class="sales-key sales-key-room" aria-hidden="true"></i>객실 매출 내역</h2>
+						<p><fmt:formatNumber value="${reservationCount}" />건 <span aria-hidden="true">·</span> <strong><fmt:formatNumber value="${roomRevenue}" />원</strong></p>
+					</header>
+					<c:choose>
+						<c:when test="${empty rooms}"><p class="sales-empty">선택한 기간과 지점에 객실 매출 내역이 없습니다.</p></c:when>
+						<c:otherwise>
+							<div class="sales-table-scroll" tabindex="0" role="region" aria-labelledby="sales-rooms-heading">
+								<table class="sales-table">
+									<thead><tr><th scope="col">체크인</th><th scope="col">지점</th><th scope="col">객실 타입</th><th scope="col" class="sales-number">기준가 / 박</th><th scope="col" class="sales-number">예약 건수</th><th scope="col" class="sales-number">매출</th></tr></thead>
+									<tbody>
+										<c:forEach var="row" items="${rooms}">
+											<tr>
+												<td><c:out value="${row.checkInDate}" /></td><td><c:out value="${row.branchName}" /></td><td><c:out value="${row.roomType}" /></td>
+												<td class="sales-number"><fmt:formatNumber value="${row.roomRate}" />원</td><td class="sales-number"><fmt:formatNumber value="${row.reservationCount}" />건</td><td class="sales-number sales-amount"><fmt:formatNumber value="${row.roomRevenue}" />원</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+						</c:otherwise>
+					</c:choose>
+				</section>
+			</c:if>
+
+			<c:if test="${showFacilities}">
+				<section class="sales-panel sales-breakdown" id="sales-facilities" aria-labelledby="sales-facilities-heading">
+					<header class="sales-breakdown-heading">
+						<h2 id="sales-facilities-heading"><i class="sales-key sales-key-facility" aria-hidden="true"></i>부대시설 매출 내역</h2>
+						<p><fmt:formatNumber value="${visitorCount}" />명 <span aria-hidden="true">·</span> <strong><fmt:formatNumber value="${facilityRevenue}" />원</strong></p>
+					</header>
+					<c:choose>
+						<c:when test="${empty facilities}"><p class="sales-empty">선택한 기간과 지점에 부대시설 매출 내역이 없습니다.</p></c:when>
+						<c:otherwise>
+							<div class="sales-table-scroll" tabindex="0" role="region" aria-labelledby="sales-facilities-heading">
+								<table class="sales-table">
+									<thead><tr><th scope="col">체크인</th><th scope="col">지점</th><th scope="col">시설</th><th scope="col" class="sales-number">성인</th><th scope="col" class="sales-number">아동</th><th scope="col" class="sales-number">성인 요금 합계</th><th scope="col" class="sales-number">아동 요금 합계</th><th scope="col" class="sales-number">매출</th></tr></thead>
+									<tbody>
+										<c:forEach var="row" items="${facilities}">
+											<tr>
+												<td><c:out value="${row.checkInDate}" /></td><td><c:out value="${row.branchName}" /></td><td><c:out value="${row.facilityName}" /></td>
+												<td class="sales-number"><fmt:formatNumber value="${row.adults}" />명</td><td class="sales-number"><fmt:formatNumber value="${row.children}" />명</td>
+												<td class="sales-number"><fmt:formatNumber value="${row.adultRevenue}" />원</td><td class="sales-number"><fmt:formatNumber value="${row.childRevenue}" />원</td><td class="sales-number sales-amount"><fmt:formatNumber value="${row.facilityRevenue}" />원</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</div>
+						</c:otherwise>
+					</c:choose>
+				</section>
+			</c:if>
+		</c:if>
+	</div>
+</main>
+<script>
+	document.title = '매출 현황 | The Moon Hotel';
+	const salesPresets = document.getElementById('sales-presets');
+	const salesForm = document.getElementById('sales-filter');
+	const salesStart = document.getElementById('sales-start');
+	const salesEnd = document.getElementById('sales-end');
+	for (const field of [salesStart, salesEnd]) {
+		field.addEventListener('input', function () {
+			for (const button of salesPresets.querySelectorAll('button')) {
+				button.setAttribute('aria-pressed', button.dataset.start === salesStart.value && button.dataset.end === salesEnd.value);
+			}
+		});
+	}
+	salesPresets.hidden = false;
+	salesPresets.addEventListener('click', function (event) {
+		const preset = event.target.closest('button[data-start]');
+		if (preset) {
+			salesStart.value = preset.dataset.start;
+			salesEnd.value = preset.dataset.end;
+			salesForm.requestSubmit();
+		}
+	});
+</script>
+<jsp:include page="../inc/footer.jsp" />

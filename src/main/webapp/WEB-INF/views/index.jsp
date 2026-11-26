@@ -62,7 +62,7 @@
 		    <p class="card-text  ">전망: 바다(전면, 측면)</p>
 		    <p class="card-text  ">위치: 본관 2~5층, 6~10층</p>
 		    <p class="card-text  ">객실크기: 36m<sup>2</sup></p>
-		    <a href="<%=request.getContextPath()%>/room/deluxeDetail.jsp" class="btn btn-dark ">자세히 보기</a>
+		    <a href="<c:url value='/room/deluxeDetail'/>" class="btn btn-dark ">자세히 보기</a>
 		    
 		  </div>			
 	    </div>
@@ -76,7 +76,7 @@
 			    <p class="card-text ">전망: 바다(측면)</p>
 			    <p class="card-text ">위치: 본관 2~5층</p>
 			    <p class="card-text ">객실크기: 36m<sup>2</sup></p>
-		    <a href="<%=request.getContextPath()%>/room/supeDetail.jsp" class="btn btn-dark ">자세히 보기</a>
+		    <a href="<c:url value='/room/supeDetail'/>" class="btn btn-dark ">자세히 보기</a>
 			  </div>
 			</div>
 	      <!-- 슈페리어 끝 -->
@@ -89,7 +89,7 @@
 			    <p class="card-text ">전망: 바다</p>
 			    <p class="card-text ">위치: 본관 2~10층</p>
 			    <p class="card-text ">객실크기: 56m<sup>2</sup></p>
-		    <a href="<%=request.getContextPath()%>/room/suitDetail.jsp" class="btn btn-dark ">자세히 보기</a>
+		    <a href="<c:url value='/room/suitDetail'/>" class="btn btn-dark ">자세히 보기</a>
 			  </div>
 			</div>
 	      <!-- 스위트 끝 -->
@@ -102,7 +102,7 @@
 			    <p class="card-text " >전망: 바다</p>
 			    <p class="card-text ">위치: 본관 7~10층</p>
 			    <p class="card-text ">객실크기: 72m<sup>2</sup></p>
-		    <a href="<%=request.getContextPath()%>/room/monoDetail.jsp" class="btn btn-dark ">자세히 보기</a>
+		    <a href="<c:url value='/room/monoDetail'/>" class="btn btn-dark ">자세히 보기</a>
 			  </div>
 			</div>
 	      <!-- 모노그램 스위트 끝 -->

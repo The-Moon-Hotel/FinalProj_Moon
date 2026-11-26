@@ -42,7 +42,7 @@ public class GuestServiceImp implements GuestService{
 			int result=0;
 			if(guestVO!=null) {
 				String dbPwd=guestVO.getPwd();
-				if(pwd.equals(dbPwd)) {
+				if(pwd != null && pwd.equals(dbPwd)) {
 					result=GuestService.LOGIN_OK;
 				}else {
 					result=GuestService.DISAGREE_PWD;

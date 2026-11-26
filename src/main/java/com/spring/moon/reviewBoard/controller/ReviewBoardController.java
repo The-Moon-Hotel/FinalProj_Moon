@@ -4,20 +4,27 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.moon.common.AccountRequired;
 import com.spring.moon.askBoard.controller.AskBoardController;
 import com.spring.moon.common.ConstUtil;
 import com.spring.moon.common.FileUploadUtil;
@@ -40,6 +47,7 @@ public class ReviewBoardController {
 	@Autowired
 	ReviewBoardService reviewBoardService; 
 	
+	@AccountRequired
 	@GetMapping("/reviewBoard/reviewWrite") 
 	public ModelAndView reviewWrite(HttpServletRequest request) throws ParseException { 
 		ModelAndView mav= new ModelAndView();
@@ -127,12 +135,14 @@ public class ReviewBoardController {
 			ReviewBoardVO vo = reviewBoardService.selectByNo(Integer.parseInt(no));
 
 			mav.addObject("vo", vo);
+			mav.addObject("reviewContent", safeReviewContent(vo));
 			mav.addObject("gno", gno);
 			
 			mav.setViewName("reviewBoard/detail");
 		}
 		return mav;
 	}
+	@AccountRequired
 	@GetMapping("/reviewBoard/BoardDelete") 
 	public ModelAndView BoardDelete(HttpServletRequest request){ 
 	ModelAndView mav= new ModelAndView();
@@ -146,14 +156,15 @@ public class ReviewBoardController {
 		mav.setViewName("common/message");
 	} else {
 		String reviewNo = request.getParameter("reviewNo");
-		ReviewBoardVO vo = reviewBoardService.selectByNo(Integer.parseInt(reviewNo));
+		ReviewBoardVO vo = requireOwnReview(userid, Integer.parseInt(reviewNo));
 		
 		mav.addObject("vo", vo);
 
-		mav.setViewName("reviewBoard/BoardDelete");
+		mav.setViewName("reviewBoard/reviewDelete");
 	}
 	return mav;
 }					
+	@AccountRequired
 	@GetMapping("/reviewBoard/reviewEdit") 
 	public ModelAndView reviewEdit(HttpServletRequest request){ 
 		ModelAndView mav= new ModelAndView();
@@ -167,9 +178,10 @@ public class ReviewBoardController {
 			mav.setViewName("common/message");
 		} else {
 			String reviewNo = request.getParameter("reviewNo");
-			ReviewBoardVO vo = reviewBoardService.selectByNo(Integer.parseInt(reviewNo));
+			ReviewBoardVO vo = requireOwnReview(userid, Integer.parseInt(reviewNo));
 			
 			mav.addObject("vo", vo);
+			mav.addObject("reviewContent", safeReviewContent(vo));
 
 			mav.setViewName("reviewBoard/reviewEdit");
 		}
@@ -180,6 +192,7 @@ public class ReviewBoardController {
 	////////////////////////////////P O S T//////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////
+	@AccountRequired
 	@PostMapping("/reviewBoard/reviewWrite")
 	public ModelAndView reviewWritePost(HttpServletRequest request, @RequestParam Map<String, Object> map){
 		ModelAndView mav = new ModelAndView();
@@ -215,7 +228,7 @@ public class ReviewBoardController {
 	
 				String r_title = (String) map.get("title");
 				String r_content = (String) map.get("content");	
-				int guestNo = Integer.parseInt( map.get("guestNo").toString());	
+				int guestNo = vo.getGuestNo();
 				String r_fileName = fileName;	
 				long r_fileSize = fileSize;
 				
@@ -242,6 +255,7 @@ public class ReviewBoardController {
 		}
 		return mav;
 	}
+	@AccountRequired
 	@PostMapping("/reviewBoard/BoardDelete") 
 	public ModelAndView BoardDeletePost(HttpServletRequest request){ 
 		ModelAndView mav= new ModelAndView();
@@ -255,7 +269,7 @@ public class ReviewBoardController {
 			mav.setViewName("common/message");
 		} else {
 			String reviewNo = request.getParameter("no");
-			String guestNo = request.getParameter("gno");
+			requireOwnReview(userid, Integer.parseInt(reviewNo));
 			
 			int cnt = reviewBoardService.deletereviewBoard(Integer.parseInt(reviewNo));
 				
@@ -268,10 +282,11 @@ public class ReviewBoardController {
 			mav.addObject("msg", msg);
 			mav.addObject("url", url);
 
-			mav.setViewName("reviewBoard/reviewBoardList");
+			mav.setViewName("common/message");
 		}
 		return mav;
 	}
+	@AccountRequired
 	@PostMapping("/reviewBoard/reviewEdit")
 	public ModelAndView reviewEditPost(HttpServletRequest request, @RequestParam Map<String, Object> map){
 		ModelAndView mav = new ModelAndView();
@@ -284,6 +299,8 @@ public class ReviewBoardController {
 			mav.addObject("url", url);
 			mav.setViewName("common/message");
 		} else {
+			int reviewNo = Integer.parseInt((String) map.get("reviewNo"));
+			requireOwnReview(userid, reviewNo);
 			String fileName="", originFileName="";
 			long fileSize=0;
 			String msg = "", url = "";
@@ -308,17 +325,16 @@ public class ReviewBoardController {
 	
 				String r_title = (String) map.get("title");
 				String r_content = (String) map.get("content");	
-				int guestNo = Integer.parseInt( map.get("guestNo").toString());	
+				int guestNo = vo.getGuestNo();
 				String r_fileName = fileName;	
 				long r_fileSize = fileSize;
 				
 				ReviewBoardVO reviewBoardVO =new ReviewBoardVO(guestNo, r_title, r_content, userid);
-				String reviewNo = (String)map.get("reviewNo");
-				int cnt = reviewBoardService.updatereviewBoard(reviewBoardVO,Integer.parseInt(reviewNo));
+				int cnt = reviewBoardService.updatereviewBoard(reviewBoardVO, reviewNo);
 	
 				if (cnt > 0) {
 					msg = "글수정 되었습니다.";
-					url = "/reviewBoard/reviewEdit";
+					url = "/reviewBoard/detail?no=" + reviewNo;
 				} else {
 					msg = "글 등록 실패!";
 					url = "javascript:history.back()";
@@ -334,6 +350,22 @@ public class ReviewBoardController {
 		}
 		return mav;
 	}
+	private ReviewBoardVO requireOwnReview(String userid, int reviewNo) {
+		try {
+			ReviewBoardVO review = reviewBoardService.selectByNo(reviewNo);
+			if (review.getGuestNo() == guestService.selectByUserid(userid).getGuestNo()) {
+				return review;
+			}
+		} catch (EmptyResultDataAccessException ignored) {
+			// Missing reviews and reviews owned by another account have the same response.
+		}
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+	}
+
+	private String safeReviewContent(ReviewBoardVO review) {
+		return Jsoup.clean(Objects.toString(review.getR_content(), ""), Safelist.relaxed());
+	}
+
 	/*
 	@RequestMapping(value="/reviewBoard/Sales") 
 	public ModelAndView Sales(HttpServletRequest request){ 

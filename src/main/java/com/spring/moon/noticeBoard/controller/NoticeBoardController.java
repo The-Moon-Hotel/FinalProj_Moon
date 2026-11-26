@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.moon.common.AccountRequired;
 import com.spring.moon.askBoard.controller.AskBoardController;
 import com.spring.moon.askBoard.model.AskBoardVO;
 import com.spring.moon.common.ConstUtil;
@@ -43,6 +44,7 @@ public class NoticeBoardController {
 	@Autowired
 	NoticeBoardService noticeBoardService; 
 	
+	@AccountRequired(admin = true)
 	@GetMapping("/noticeBoard/noticeWrite") 
 	public ModelAndView Sales(HttpServletRequest request) throws ParseException { 
 		ModelAndView mav= new ModelAndView();
@@ -113,6 +115,7 @@ public class NoticeBoardController {
 		mav.addObject("pageVo", pageVo);
 		mav.addObject("guestVo", guestVo);
 		mav.addObject("GuestOrAdmin", GuestOrAdmin);
+		mav.addObject("GuestOrAdmin", GuestOrAdmin);
 		mav.addObject("ADMIN_ACCOUNT", GuestService.ADMIN_ACCOUNT);
 
 		mav.setViewName("noticeBoard/noticeBoardList");
@@ -148,12 +151,14 @@ public class NoticeBoardController {
 
 			mav.addObject("vo", vo);
 			mav.addObject("GuestOrAdmin", GuestOrAdmin);
+			mav.addObject("GuestOrAdmin", GuestOrAdmin);
 			mav.addObject("ADMIN_ACCOUNT", GuestService.ADMIN_ACCOUNT);
 			
 			mav.setViewName("noticeBoard/detail");
 		}
 		return mav;
 	}
+	@AccountRequired(admin = true)
 	@GetMapping("/noticeBoard/BoardDelete") 
 	public ModelAndView BoardDelete(HttpServletRequest request){ 
 	ModelAndView mav= new ModelAndView();
@@ -175,6 +180,7 @@ public class NoticeBoardController {
 	}
 	return mav;
 }					
+	@AccountRequired(admin = true)
 	@GetMapping("/noticeBoard/noticeEdit") 
 	public ModelAndView noticeEdit(HttpServletRequest request){ 
 		ModelAndView mav= new ModelAndView();
@@ -200,6 +206,7 @@ public class NoticeBoardController {
 	////////////////////////////////P O S T//////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////
+	@AccountRequired(admin = true)
 	@PostMapping("/noticeBoard/noticeWrite")
 	public ModelAndView noticeWritePost(HttpServletRequest request, @RequestParam Map<String, Object> map){
 		ModelAndView mav = new ModelAndView();
@@ -235,7 +242,7 @@ public class NoticeBoardController {
 	
 				String n_title = (String) map.get("title");
 				String n_content = (String) map.get("content");	
-				int guestNo = Integer.parseInt( map.get("guestNo").toString());	
+				int guestNo = vo.getGuestNo();
 				String n_fileName = fileName;	
 				long n_fileSize = fileSize;
 				
@@ -268,6 +275,7 @@ public class NoticeBoardController {
 		}
 		return mav;
 	}
+	@AccountRequired(admin = true)
 	@PostMapping("/noticeBoard/BoardDelete") 
 	public ModelAndView BoardDeletePost(HttpServletRequest request){ 
 		ModelAndView mav= new ModelAndView();
@@ -294,10 +302,11 @@ public class NoticeBoardController {
 			mav.addObject("msg", msg);
 			mav.addObject("url", url);
 
-			mav.setViewName("noticeBoard/noticeBoardList");
+			mav.setViewName("common/message");
 		}
 		return mav;
 	}
+	@AccountRequired(admin = true)
 	@PostMapping("/noticeBoard/noticeEdit")
 	public ModelAndView noticeEditPost(HttpServletRequest request, @RequestParam Map<String, Object> map){
 		ModelAndView mav = new ModelAndView();
@@ -334,7 +343,7 @@ public class NoticeBoardController {
 	
 				String n_title = (String) map.get("title");
 				String n_content = (String) map.get("content");	
-				int guestNo = Integer.parseInt( map.get("guestNo").toString());	
+				int guestNo = vo.getGuestNo();
 				String n_fileName = fileName;	
 				long n_fileSize = fileSize;
 				
@@ -351,7 +360,7 @@ public class NoticeBoardController {
 	
 				if (cnt > 0) {
 					msg = "글수정 되었습니다.";
-					url = "/noticeBoard/detail";
+					url = "/noticeBoard/detail?no=" + noticeNo;
 				} else {
 					msg = "글 등록 실패!";
 					url = "javascript:history.back()";

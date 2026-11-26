@@ -29,7 +29,7 @@
 		<c:forEach var="vo" items="${rlist}">
 			<tr>
 				<td><a href="/admin/guestReservDetail?reservNo=${vo.reservNo}">${vo.reservNo}</a></td>
-				<td>${vo.name}</td>
+				<td><c:out value="${vo.name}" /></td>
 				<td>${vo.locName}</td>
 				<td>${vo.ci_date} - ${vo.co_date}</td>
 				<td align="right"><fmt:formatNumber value="${vo.totalPrice }" pattern="#,###"/></td>
@@ -53,6 +53,6 @@
 </table>
 <div align="center">
 	<a class="btn btn-secondary" role="button" id="reservList"
-		 href="guestList.jsp">회원 목록</a>
+		 href="/admin/guestList">회원 목록</a>
 </div>
 <jsp:include page="../inc/footer.jsp"></jsp:include>

@@ -9,9 +9,6 @@ public interface ReservationService {
 	//예약할 방의 정보를 매개변수로 받아서 reservation 테이블에 저장하는 메서드
 	 int insertReservation (ReservationVO reservVo) ;
 	
-	//회원 번호를 매개 변수로 받아서 조회한 회원의 가장 최근 예약 번호를 찾는 메서드
-	 int searchReservNo(int guestNo) ;
-	
 	//회원 번호를 매개 변수로 받아서 조회한 회원의 가장 최근 예약 정보 조회하는 메서드
 	 ReservationVO searchReserv(int guestNo);
 	

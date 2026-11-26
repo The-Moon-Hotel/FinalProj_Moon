@@ -59,17 +59,16 @@ body {
 			location.href="/reviewBoard/reviewEdit";
 		});
 		$('#btn1').click(function(){
-			location.href="reviewBoard/reviewBoardList";
+			location.href="/reviewBoard/reviewBoardList";
 		});
 	});
 </script>
 
 <body>
 	<div class="divForm">
-	<form name="frmDelete" method="post" action="/reviewBoard/reviewDelete?reviewNo=${vo.reviewNo}">
+	<form name="frmDelete" method="post" action="/reviewBoard/BoardDelete">
 			<!--  삭제시 no가 필요하므로 hidden 필드에 넣어준다. -->
 			<input type="hidden" name="no" value="${vo.reviewNo}">
-			<input type="hidden" name="gno" value="${vo.guestNo}">
 			<fieldset>
 			<br><br><br><br><br>
 				<div style="text-align: center;">

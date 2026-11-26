@@ -1,6 +1,7 @@
 package com.spring.moon.facility.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,30 +21,28 @@ public class FacilityDAO {
 
 	// 객실 예약 정보를 받아 조식 예약 정보를 조회하는 메서드
 	public FacilityVO selectBreakFastInfo(int reservNo) {
-		String sql = "select * from facility where reservNo=" + reservNo + " and facinfoNo=1";
-		FacilityVO facVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<FacilityVO>(FacilityVO.class));
-		return facVo;
+		return selectFacilityInfo(reservNo, 1);
 	}
 
 	// 객실 예약 정보를 받아 수영장 예약 정보를 조회하는 메서드
 	public FacilityVO selectPoolInfo(int reservNo) {
-		String sql = "select * from facility where reservNo=" + reservNo + " and facinfoNo=2";
-		FacilityVO facVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<FacilityVO>(FacilityVO.class));
-		return facVo;
+		return selectFacilityInfo(reservNo, 2);
 	}
 
 	// 객실 예약 정보를 받아 사우나 예약 정보를 조회하는 메서드
 	public FacilityVO selectSaunaInfo(int reservNo) {
-		String sql = "select * from facility where reservNo=" + reservNo + " and facinfoNo=3";
-		FacilityVO facVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<FacilityVO>(FacilityVO.class));
-		return facVo;
+		return selectFacilityInfo(reservNo, 3);
 	}
 
 	// 객실 예약 정보를 받아 헬스장 예약 정보를 조회하는 메서드
 	public FacilityVO selectGymInfo(int reservNo) {
-		String sql = "select * from facility where reservNo=" + reservNo + " and facinfoNo=3";
-		FacilityVO facVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<FacilityVO>(FacilityVO.class));
-		return facVo;
+		return selectFacilityInfo(reservNo, 4);
+	}
+
+	private FacilityVO selectFacilityInfo(int reservNo, int facInfoNo) {
+		String sql = "select * from facility where reservNo = ? and facInfoNo = ?";
+		return DataAccessUtils.singleResult(
+				jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(FacilityVO.class), reservNo, facInfoNo));
 	}
 
 	// 예약번호를 매개 변수로 부대시설 예약 삭제하는 메서드

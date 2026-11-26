@@ -122,7 +122,7 @@
 			</div>
 		<div class="form-group"style="display:inline-block">
 			<input type="text" class="form-control" name="keyword" placeholder="검색하고자 하는 내용 입력"
-			style="width:400px" style="float:right" value="${map.keyword}">
+			style="width:400px" style="float:right" value="<c:out value='${map.keyword}' />">
 			</div>
 		<div class="form-group"style="display:inline-block">
 			<button id="searchBtn" type="submit" class="btn btn-dark" style="margin-bottom: 5px">검색</button>

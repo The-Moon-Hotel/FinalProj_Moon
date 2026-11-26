@@ -49,9 +49,9 @@
 								<tr style="text-align: center">
 									<td>${vo.reviewNo}</td>
 									<td style="text-align: left">
-										<a href="/reviewBoard/detail?no=${vo.reviewNo}">${vo.r_title}</a>
+										<a href="/reviewBoard/detail?no=${vo.reviewNo}"><c:out value="${vo.r_title}" /></a>
 									</td>
-									<td>${vo.userid }</td>
+									<td><c:out value="${vo.userid}" /></td>
 									<td><fmt:formatDate value="${vo.r_regdate }" pattern="yyyy-MM-dd" />
 									</td>
 								</tr>
@@ -94,7 +94,7 @@
 			</a>
 		</c:if>
 	</div>
-	<form name= "frm1" method="post" action="reviewBoardList.jsp" style="width: 100%">
+	<form name= "frm1" method="post" action="/reviewBoard/reviewBoardList" style="width: 100%">
 		<div class="form-group"style="display:inline-block">
 			<label for="exampleSelect1" class="form-label mt-4"></label>
 			<select class="form-select" name="condition" style="width:100px" style="float:left">
@@ -117,7 +117,7 @@
 			</div>
 		<div class="form-group"style="display:inline-block">
 			<input type="text" class="form-control" name="keyword" placeholder="검색하고자 하는 내용 입력"
-			style="width:400px" style="float:right" value="${map.keyword}">
+			style="width:400px" style="float:right" value="<c:out value='${map.keyword}' />">
 			</div>
 		<div class="form-group"style="display:inline-block">
 			<button id="searchBtn" type="submit" class="btn btn-dark" style="margin-bottom: 5px">검색</button>

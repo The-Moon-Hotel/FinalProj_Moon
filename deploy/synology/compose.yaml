@@ -1,0 +1,13 @@
+services:
+  app:
+    image: ${THEMOON_IMAGE:?Set THEMOON_IMAGE in the deployment .env file}
+    restart: unless-stopped
+    env_file: app.env
+    ports:
+      - "${THEMOON_BIND_ADDRESS:-127.0.0.1}:${THEMOON_PORT:-18080}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "--show-error", "--max-time", "5", "--output", "/dev/null", "http://127.0.0.1:8080/noticeBoard/noticeBoardList"]
+      interval: 10s
+      timeout: 6s
+      retries: 3
+      start_period: 25s

@@ -1,5 +1,6 @@
 package com.spring.moon.guest.controller;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -8,21 +9,36 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.moon.common.AccountAccess;
+import com.spring.moon.common.AccountRequired;
 import com.spring.moon.guest.model.GuestService;
 import com.spring.moon.guest.model.GuestVO;
+import com.spring.moon.reservRoom.model.ReservationService;
+import com.spring.moon.reservRoom.model.ReservationVO;
+import com.spring.moon.room.model.RoomService;
 
 @Controller
 public class GuestController {
 	@Autowired
 	GuestService guestService;
+
+	@Autowired
+	ReservationService reservationService;
+
+	@Autowired
+	RoomService roomService;
 
 	@GetMapping("/login/login")
 	public ModelAndView login(HttpServletRequest request) {
@@ -91,6 +107,7 @@ public class GuestController {
 		return mav;
 	}
 
+	@AccountRequired
 	@GetMapping("/guest/guestEdit_pwdChk")
 	public ModelAndView guestEdit_pwdChk(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -109,6 +126,7 @@ public class GuestController {
 		return mav;
 	}
 
+	@AccountRequired
 	@GetMapping("/guest/signEdit")
 	public ModelAndView signEdit(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -118,16 +136,16 @@ public class GuestController {
 		System.out.println("guestVO.getName()"+guestVO.getName()+"guestVO.getTel()="+guestVO.getTel()+", guestVO.getEmail()="+guestVO.getEmail());
 		String tel = guestVO.getTel();
 		String tel1 = "", tel2 = "", tel3 = "";
-		if (tel != null) {
-			String[] telArr = guestVO.getTel().split("-");
+		if (tel != null && tel.split("-").length == 3) {
+			String[] telArr = tel.split("-");
 			tel1 = telArr[0];
 			tel2 = telArr[1];
 			tel3 = telArr[2];
 		}
 		String email = guestVO.getEmail();
 		String email1 = "", email2 = "";
-		if (email != null ) {
-			String[] emailArr = guestVO.getEmail().split("@");
+		if (email != null && email.split("@").length == 2) {
+			String[] emailArr = email.split("@");
 			
 			email1 = emailArr[0];
 			email2 = emailArr[1];
@@ -142,6 +160,7 @@ public class GuestController {
 		mav.setViewName("guest/signEdit");
 		return mav;
 	}
+	@AccountRequired
 	@GetMapping("/guest/guestOut")
 	public ModelAndView guestOut(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -159,40 +178,32 @@ public class GuestController {
 		}
 		return mav;
 	}
+	@AccountRequired
 	@GetMapping("/guest/myReservDetail")
-	public ModelAndView myReservDetail(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView();
-		HttpSession session = request.getSession();
-		String userid = (String) session.getAttribute("userid");
-		
-		if (userid == null) {
-			String msg = "로그아웃 되었습니다.", url = "/login/login";
-			mav.addObject("msg", msg);
-			mav.addObject("url", url);
-			mav.setViewName("common/message");
-		} else {
-			mav.addObject("userid", userid);
-			mav.setViewName("guest/myReservDetail");
+	public ModelAndView myReservDetail(@RequestAttribute(AccountAccess.CURRENT_GUEST) GuestVO guest, @RequestParam int reservNo) {
+		ReservationVO reservation;
+		try {
+			reservation = reservationService.searchReservByNo(reservNo);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
+		if (reservation.getGuestNo() != guest.getGuestNo()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		ModelAndView mav = new ModelAndView("guest/myReservDetail", "reservation", reservation);
+		mav.addObject("room", roomService.selectRoomByRoomNo(reservation.getRoomNo()));
 		return mav;
 	}
+
+	@AccountRequired
 	@GetMapping("/guest/myReservList")
-	public ModelAndView myReservList(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView();
-		HttpSession session = request.getSession();
-		String userid = (String) session.getAttribute("userid");
-		
-		if (userid == null) {
-			String msg = "로그아웃 되었습니다.", url = "/login/login";
-			mav.addObject("msg", msg);
-			mav.addObject("url", url);
-			mav.setViewName("common/message");
-		} else {
-			mav.addObject("userid", userid);
-			mav.setViewName("guest/myReservList");
-		}
+	public ModelAndView myReservList(@RequestAttribute(AccountAccess.CURRENT_GUEST) GuestVO guest) {
+		ModelAndView mav = new ModelAndView("guest/myReservList");
+		mav.addObject("reservations", reservationService.selectNameLocAllReserv(guest.getGuestNo()));
+		mav.addObject("today", LocalDate.now().toString());
 		return mav;
 	}
+
 	//////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////P O S T/////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -210,6 +221,7 @@ public class GuestController {
 		HttpSession session = request.getSession();
 		if (result == GuestService.LOGIN_OK) {
 			// session에 저장
+			request.changeSessionId();
 			session.setAttribute("userid", userid);
 			// 쿠키에 저장 - 아이디 저장하기가 체크되었다면
 			Cookie ck = new Cookie("ck_userid", userid);
@@ -275,6 +287,7 @@ public class GuestController {
 		return mav;
 	}
 
+	@AccountRequired
 	@PostMapping("/guest/guestEdit_pwdChk")
 	public ModelAndView guestEdit_pwdChkPost(HttpServletRequest request, @RequestParam String pwd) {
 		ModelAndView mav = new ModelAndView();
@@ -303,6 +316,7 @@ public class GuestController {
 		return mav;
 	}
 
+	@AccountRequired
 	@PostMapping("/guest/signEdit")
 	public ModelAndView signEditPost(HttpServletRequest request, @RequestParam Map<String, Object> map) {
 		ModelAndView mav = new ModelAndView();
@@ -355,6 +369,7 @@ public class GuestController {
 		mav.setViewName("common/message");
 		return mav;
 	}
+	@AccountRequired
 	@PostMapping("/guest/guestOut")
 	public ModelAndView guestOutPost(HttpServletRequest request,@RequestParam String pwd) {
 		ModelAndView mav = new ModelAndView();

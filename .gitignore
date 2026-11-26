@@ -1,4 +1,9 @@
 HELP.md
+.env.local
+.env.local.*.pending
+/deploy/synology/.env
+/deploy/synology/app.env
+/deploy/synology/.deploy.lock/
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

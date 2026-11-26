@@ -16,7 +16,7 @@
 	crossorigin="anonymous">
 <div style="height: 800px;">
 	<c:choose>
-		<c:when test="${g_vo.sys !=1 }">
+		<c:when test="${admin }">
 			<p style="font-size: 120%; text-align: center; margin-top: 20px;">고객
 				문의내역</p>
 		</c:when>
@@ -33,7 +33,7 @@
 				<th>번호</th>
 				<th>제목</th>
 				<c:choose>
-					<c:when test="${g_vo.sys !=1 }">
+					<c:when test="${admin }">
 						<th>고객번호</th>
 					</c:when>
 					<c:otherwise>
@@ -62,11 +62,11 @@
 								<td>${vo.askNo}</td>
 								<td style="text-align: left"><a
 									href="<c:url value='/askBoard/askDetail?askNo=${vo.askNo}'/>">
-										${vo.a_title }</a></td>
-								<c:if test="${g_vo.sys==1 }">
-									<td>${vo.name }</td>
+										<c:out value="${vo.a_title}" /></a></td>
+								<c:if test="${not admin }">
+									<td><c:out value="${vo.name}" /></td>
 								</c:if>
-								<c:if test="${g_vo.sys!=1 }">
+								<c:if test="${admin }">
 									<td>${vo.guestNo }</td>
 								</c:if>
 								<td><fmt:formatDate value="${vo.a_regdate }"
@@ -115,7 +115,7 @@
 			</a>
 		</c:if>
 	</div>
-	<c:if test="${g_vo.sys!=1 }">
+	<c:if test="${admin }">
 		<div class="divSearch" style="text-align: center">
 			<form name="frmSearch" method="post" action='/askBoard/askBoardList'>
 				<select name="condition">
@@ -128,20 +128,22 @@
 						<c:if test="${map.condition=='a_content' }">
 	            		selected="selected"
 	            	</c:if>>내용</option>
-					<option value="askNo"
-						<c:if test="${map.condition=='askNo' }">
+					<option value="guestNo"
+						<c:if test="${map.condition=='guestNo' }">
 		            		selected="selected"
 		            </c:if>>고객번호</option>
 				</select> <input type="text" name="keyword" title="검색어 입력"
-					value="${map.keyword}"> <input type="submit" value="검색">
+					value="<c:out value='${map.keyword}' />"> <input type="submit" value="검색">
 
 			</form>
 
 		</div>
 	</c:if>
+	<c:if test="${not admin}">
 	<div class="divbtn" style="margin: 0 auto; text-align: center;">
 		<a href='/askBoard/askWrite' class="btn btn-dark"
 			style="margin-left: 750px;">글쓰기</a>
 	</div>
+	</c:if>
 </div>
 <jsp:include page="../inc/footer.jsp"></jsp:include>

@@ -37,9 +37,9 @@ public class CommentDAO {
 	
 	
 	
-	public int deleteComment(int no){
-			String sql = "delete from comments where no = ?";
-			int cnt = jdbcTemplate.update(sql, no);
+	public int deleteComment(int no, int askNo){
+			String sql = "delete from comments where no = ? and askNo = ?";
+			int cnt = jdbcTemplate.update(sql, no, askNo);
 			return cnt;
 	}
 	public int deleteAskNoComment(int askNo){

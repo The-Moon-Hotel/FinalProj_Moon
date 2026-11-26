@@ -16,7 +16,7 @@ public class AskBoardVO {
 	
 	//자료실 추가
 	private String fileName;
-	private long fileSize; 
+	private Long fileSize;
 	private int downCount;
     private String originalFileName; 
 }

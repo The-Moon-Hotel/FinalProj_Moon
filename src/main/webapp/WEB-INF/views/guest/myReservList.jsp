@@ -1,50 +1,38 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:import url="/inc/top"></c:import>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-	crossorigin="anonymous">
-<div style="height: 800px;">
-	<p style="font-size: 120%; text-align: center; margin-top:20px;">예약 내역</p>
-	<div style="width: 800px; margin:auto; text-align: center">
-		<form name="searMyReserv" method="post" action="myReservList_ok.jsp">
-			<span style="margin: 0 10px 0 10px; font-weight: bold">투숙기간</span>
-			<select class="form-select" style="width: 160px; display: inline;">
-				<option>모든 예약 보기</option>
-				<option>예약 완료</option>
-				<option>예약 취소</option>
-			</select>
-			<input type="date" class="" name="startDate"> ~ <input type="date" name="endDate"> 
-			<input type="submit" value="예약조회"> 
-		</form>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:import url="/inc/top" />
+<main class="container mt-4" style="min-height: 70vh;">
+	<h2 class="text-center mb-4">내 예약 내역</h2>
+	<div class="table-responsive">
+		<table class="table text-center">
+			<thead>
+				<tr><th>예약번호</th><th>호텔</th><th>투숙 날짜</th><th>객실 요금</th><th>이용상태</th></tr>
+			</thead>
+			<tbody>
+				<c:if test="${empty reservations}">
+					<tr><td colspan="5">예약 내역이 없습니다.</td></tr>
+				</c:if>
+				<c:forEach var="reservation" items="${reservations}">
+					<c:url var="detailUrl" value="/guest/myReservDetail">
+						<c:param name="reservNo" value="${reservation.reservNo}" />
+					</c:url>
+					<tr>
+						<td><a href="${detailUrl}">${reservation.reservNo}</a></td>
+						<td><c:out value="${reservation.locName}" /></td>
+						<td><c:out value="${reservation.ci_date}" /> ~ <c:out value="${reservation.co_date}" /></td>
+						<td><fmt:formatNumber value="${reservation.totalPrice}" />원</td>
+						<td>
+							<c:choose>
+								<c:when test="${today lt reservation.ci_date}">이용 예정</c:when>
+								<c:when test="${today ge reservation.co_date}">이용 완료</c:when>
+								<c:otherwise>투숙 중</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
 	</div>
-	<hr>
-	<table class="table" style="width: 800px; margin:auto; text-align: center;">
-	  <thead>
-	    <tr>
-	      <th>예약번호</th>
-		  <th>호텔정보</th>
-		  <th>이용일자</th>
-		  <th>이용상태</th>	
-	    </tr>
-	  </thead>
-	  <tbody>
-	    <tr>
-	      <td><a href="/guest/myReservDetail">10336951</a></td>
-		  <td>더문호텔 1호점</td>
-		  <td>2021년 09월 28일 - 2021년 09월 29일</td>
-		  <td>이용 완료</td>	
-	    </tr>
-	    <tr>
-	      <td><a href="/guest/myReservDetail">10336951</a></td>
-		  <td>더문호텔 1호점</td>
-		  <td>2021년 09월 28일 - 2021년 09월 29일</td>
-		  <td>예약 취소</td>	
-	    </tr>
-	  </tbody>
-</table>
-</div>
-<jsp:include page="../inc/footer.jsp"></jsp:include>
+</main>
+<jsp:include page="../inc/footer.jsp" />

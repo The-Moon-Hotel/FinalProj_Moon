@@ -54,12 +54,12 @@
 			<div class="form-group">
 				<label for="exampleInputEmail1" class="form-label mt-4"></label>
 				<input type="text" class="form-control" id="title1" name="a_title"
-					value="${vo.a_title}" > 
+					value="<c:out value='${vo.a_title}' />" >
 			</div>
 			<div class="form-group">
 				<label for="exampleTextarea" class="form-label mt-4"></label>
 				<textarea id="txtCon" class="form-control" rows="6" name="a_content"
-					 style="height: 200px;">${vo.a_content }</textarea>
+					 style="height: 200px;"><c:out value="${vo.a_content}" /></textarea>
 			</div>
 			<br><br>
 			<button id="sub1" type="submit" class="btn btn-dark" >수정</button>

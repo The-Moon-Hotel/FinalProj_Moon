@@ -2,6 +2,7 @@ package com.spring.moon.askBoard.model;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -35,15 +36,15 @@ public class AskBoardDAO {
 	 * @throws SQLException
 	 */
 	public List<AskBoardVO> selectAll(String condition, String keyword) {
-		String sql = "select askNo, guestno, a_title, a_content, filename, originalFilename, a_regdate from askboard";
-		// 검색의 경우
-		if (keyword != null && !keyword.isEmpty()) {
-			sql += " where " + condition + " like '%" + keyword + "%'";
+		String sql = "select a.*, g.name from askboard a join guest g on a.guestNo = g.guestNo";
+		String orderBy = " order by askNo desc";
+		BeanPropertyRowMapper<AskBoardVO> mapper = new BeanPropertyRowMapper<>(AskBoardVO.class);
+		if (keyword == null || keyword.isEmpty()) {
+			return jdbcTemplate.query(sql + orderBy, mapper);
 		}
-		sql += " order by askNo desc";
-		List<AskBoardVO> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<AskBoardVO>(AskBoardVO.class));
-		
-		return list;
+		String column = Map.of("askNo", "a.askNo", "guestNo", "a.guestNo", "a_content", "a.a_content")
+				.getOrDefault(condition == null ? "" : condition, "a.a_title");
+		return jdbcTemplate.query(sql + " where " + column + " like ?" + orderBy, mapper, "%" + keyword + "%");
 	}
 
 	/**
@@ -97,8 +98,8 @@ public class AskBoardDAO {
 	 * @throws SQLException
 	 */
 	public List<AskBoardVO> selectByGuestno(int guestno){
-		String sql = "select * from askboard where guestno = " + guestno + " order by askNo desc";
-		List<AskBoardVO> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<AskBoardVO>(AskBoardVO.class));
+		String sql = "select a.*, g.name from askboard a join guest g on a.guestNo = g.guestNo where a.guestNo = ? order by askNo desc";
+		List<AskBoardVO> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AskBoardVO.class), guestno);
 
 		return list;
 

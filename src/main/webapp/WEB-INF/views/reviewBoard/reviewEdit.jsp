@@ -52,7 +52,7 @@ var oEditors=[];
 	        $('#frm').submit();
 	    });
 			$('#btn1').click(function() {
-			location.href = "reviewBoardList.jsp";
+			location.href = "/reviewBoard/reviewBoardList";
 		});
 	});
 </script>
@@ -60,7 +60,7 @@ var oEditors=[];
 <body>
 <br><br><br>
 <div id="div1" class="container text-left">
-	<form id="frm" method="post" enctype="multipart/form-data" action="reviewEdit_ok.jsp">
+	<form id="frm" method="post" enctype="multipart/form-data" action="/reviewBoard/reviewEdit">
 		<input type ="hidden" name="reviewNo" value="${vo.reviewNo}">
 		<input type ="hidden" name="guestNo" value="${vo.guestNo}">
 		<fieldset>
@@ -73,12 +73,12 @@ var oEditors=[];
 			</div>
 			<div class="form-group">
 				<label for="exampleInputEmail1" class="form-label mt-4"></label>
-				<input type="text" name="title" class="form-control" id="title1" value="${vo.r_title}">
+				<input type="text" name="title" class="form-control" id="title1" value="<c:out value='${vo.r_title}' />">
 				
 			</div>
 			<div class="form-group">
 				<label for="exampleTextarea" class="form-label mt-4"></label>
-				<textarea id="content" name="content"class="form-control" rows="6">${vo.r_content}</textarea>
+				<textarea id="content" name="content"class="form-control" rows="6"><c:out value="${reviewContent}" /></textarea>
 			</div>
 			<div class="form-group">
 				<label for="formFile" class="form-label mt-4">파일 첨부</label>

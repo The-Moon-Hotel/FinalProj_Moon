@@ -9,10 +9,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.moon.common.AccountRequired;
 import com.spring.moon.common.Utility;
 import com.spring.moon.facility.model.FacilityService;
 import com.spring.moon.facility.model.FacilityVO;
@@ -57,6 +59,7 @@ public class ReservationController {
 		return mav;
 	}
 	 */
+	@AccountRequired
 	@GetMapping("/reservRoom/reservation1")
 	public ModelAndView reservation1(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -73,6 +76,7 @@ public class ReservationController {
 		return mav;
 	}
 
+	@AccountRequired
 	@GetMapping("/reservRoom/reservation2")
 	public ModelAndView reservation2() {
 		ModelAndView mav = new ModelAndView();
@@ -80,6 +84,7 @@ public class ReservationController {
 		return mav;
 	}
 
+	@AccountRequired
 	@GetMapping("/reservRoom/reservation3")
 	public ModelAndView reservation3(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -99,6 +104,7 @@ public class ReservationController {
 		return mav;
 	}
 
+	@AccountRequired
 	@GetMapping("/reservRoom/reservConfirm")
 	public ModelAndView reservConfirm(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -128,6 +134,7 @@ public class ReservationController {
 			gVo = facService.selectGymInfo(reservNo);
 			
 			mav.addObject("roomVo", roomVo);
+			mav.addObject("reservVo", reservVo);
 			mav.addObject("bVo", bVo);
 			mav.addObject("pVo", pVo);
 			mav.addObject("sVo", sVo);
@@ -160,6 +167,7 @@ public class ReservationController {
 		return mav;
 	}
 	*/
+	@AccountRequired
 	@PostMapping("/reservRoom/reservation1")
 	public ModelAndView reservation1Post(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -180,6 +188,8 @@ public class ReservationController {
 		return mav;
 	}
 
+	@Transactional
+	@AccountRequired
 	@PostMapping("/reservRoom/reservation3")
 	public ModelAndView reservation3Post(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -243,7 +253,7 @@ public class ReservationController {
 
 			if (cnt > 0) {
 
-				int reservNo = this.reservationService.searchReservNo(guestNo);
+			int reservNo = reservVo.getReservNo();
 
 				if (b_adult != null) { // 조식 예약
 					facVo.setAdultNo(Integer.parseInt(b_adult));

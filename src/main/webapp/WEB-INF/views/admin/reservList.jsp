@@ -69,7 +69,7 @@
 				<c:set var="num" value="${num-1 }" />
 				<tr>
 				<td><a href="/admin/reservDetail?reservNo=${vo.reservNo}">${vo.reservNo}</a></td>
-				<td>${vo.name}</td>
+				<td><c:out value="${vo.name}" /></td>
 				<td>${vo.locName}</td>
 				<td>${vo.ci_date} - ${vo.co_date}</td>
 				<td align="right"><fmt:formatNumber value="${vo.totalPrice }" pattern="#,###"/></td>

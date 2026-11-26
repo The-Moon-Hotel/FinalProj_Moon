@@ -14,15 +14,15 @@ public class RoomDAO {
 
 	// 지점명을 매개변수로 받아서 객실 정보 반환하는 메서드
 	public List<RoomVO> selectRoom(String locName) {
-		String sql = "select * from room where locName= '"+locName+"' ";
-		List<RoomVO> rlist = jdbcTemplate.query(sql, new BeanPropertyRowMapper<RoomVO>(RoomVO.class));
+		String sql = "select * from room where locName = ?";
+		List<RoomVO> rlist = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(RoomVO.class), locName);
 		return rlist;
 	}
 
 	// 지점 정보, 객실 타입을 매개변수로 하여 객실 정보를 받환하는 매서드
 	public RoomVO selectRoomByType(String locName, String roomType) {
-		String sql = "select * from room where locName= '"+locName+"' and roomType= '"+roomType+"' ";
-		RoomVO roomVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<RoomVO>(RoomVO.class));
+		String sql = "select * from room where locName = ? and roomType = ?";
+		RoomVO roomVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(RoomVO.class), locName, roomType);
 		return roomVo;
 	}
 

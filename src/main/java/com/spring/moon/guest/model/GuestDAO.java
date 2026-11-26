@@ -33,9 +33,9 @@ public class GuestDAO {
 
 	// 로그인
 	public GuestVO loginCheck(String userid, String pwd)  {
-		String sql = "select pwd from guest where userid = '"+userid+"' and outdate is null limit 1";
+		String sql = "select pwd from guest where userid = ? and outdate is null limit 1";
 		try {
-			GuestVO guestVo = jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
+			GuestVO guestVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(GuestVO.class), userid);
 			return guestVo;
 		}catch (EmptyResultDataAccessException e) {
 			return null;
@@ -44,8 +44,8 @@ public class GuestDAO {
 
 	// 회원정보 페이지에 회원정보 불러올때
 	public GuestVO selectByUserid(String userid)  {
-		String sql = "select * from guest where userid ='"+userid+"' ";
-		GuestVO	guestVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<GuestVO>(GuestVO.class));
+		String sql = "select * from guest where userid = ?";
+		GuestVO guestVo = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(GuestVO.class), userid);
 		
 		return guestVo;
 	}
@@ -73,14 +73,11 @@ public class GuestDAO {
 
 	// 전체 회원 조회
 	public List<GuestVO> selectAllGuest(String condition, String keyword)  {	
-		String sql = "select * from guest ";
-		if (keyword != null && !keyword.isEmpty()) {
-			sql += " where " + condition + " like  '%' || "+keyword+" || '%' ";
+		String sql = "select * from guest";
+		BeanPropertyRowMapper<GuestVO> mapper = new BeanPropertyRowMapper<>(GuestVO.class);
+		if (keyword != null && !keyword.isEmpty() && List.of("name", "userid", "guestNo").contains(condition == null ? "" : condition)) {
+			return jdbcTemplate.query(sql + " where " + condition + " like ? order by guestNo desc", mapper, "%" + keyword + "%");
 		}
-		sql += "order by guestNo desc";
-
-		List<GuestVO> glist = jdbcTemplate.query(sql, new BeanPropertyRowMapper<GuestVO>(GuestVO.class)) ;
-		return glist;
-
+		return jdbcTemplate.query(sql + " order by guestNo desc", mapper);
 	}
 }

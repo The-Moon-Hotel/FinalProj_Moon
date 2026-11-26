@@ -48,10 +48,10 @@
 		      	<a href="/admin/guestDetail?guestNo=${vo.guestNo}">
 		      		${vo.guestNo }</a>
 		      </td>
-			  <td>${vo.name }</td>
-			  <td>${vo.userid }</a></td>
-			  <td>${vo.email }</td>
-			  <td>${vo.tel }</td>
+			  <td><c:out value="${vo.name}" /></td>
+			  <td><c:out value="${vo.userid}" /></td>
+			  <td><c:out value="${vo.email}" /></td>
+			  <td><c:out value="${vo.tel}" /></td>
 			  <td><fmt:formatDate value="${vo.joindate }" pattern="yyyy-MM-dd" /></td>	
 		    </tr>
 		</c:if>
@@ -94,8 +94,8 @@
 		</c:if>
 </div>
 <div class="guestSearch" style="text-align: center; padding: 10px">
-   	<form name="frmSearch" method="post" action='guestList.jsp'>
-        <select name="searchCondition">
+	<form name="frmSearch" method="post" action='/admin/guestList'>
+        <select name="condition">
             <option value="name" 
             <c:if test="${map.condition=='name' }">
 	        	selected="selected"
@@ -112,8 +112,8 @@
 			    </c:if>
             >회원번호</option>
         </select>   
-        <input type="text" name="searchKeyword" title="검색어 입력"
-        	value="${map.keyword}">   
+        <input type="text" name="keyword" title="검색어 입력"
+		value="<c:out value='${map.keyword}' />">
 		<input type="submit" value="검색">
     </form>
 </div>

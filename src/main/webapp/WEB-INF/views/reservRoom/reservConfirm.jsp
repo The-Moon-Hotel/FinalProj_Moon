@@ -24,7 +24,7 @@
 							</td>	
 						</tr>
 						<tr align="left">
-							<td>체크인날짜 : <b>${reservVoc.ci_date }</b></td>
+							<td>체크인날짜 : <b>${reservVo.ci_date }</b></td>
 							<td>체크아웃 날짜 : <b>${reservVo.co_date }</b></td>				
 						</tr>
 						<tr align="left">
@@ -71,7 +71,7 @@
 			</tr>
 			<tr>
 				<td colspan="2" align="center">총 금액 :
-					<b> ${reservVo.totalPrice +(bVo.adultNo*40000)+(bVo.kidsNo*170000)+(pVo.adultNo*45000)
+					<b> ${reservVo.totalPrice +(bVo.adultNo*40000)+(bVo.kidsNo*17000)+(pVo.adultNo*45000)
 					+(pVo.kidsNo*28000)+(sVo.adultNo*35000)+(gVo.adultNo*20000)}원 </b>
 				</td>
 			</tr>
